@@ -1,9 +1,22 @@
 .login-container {
   /* border: 2px solid black; */
-  height: 60vh;
+  height: 70vh;
   /* width: 70vw; */
  margin-top: 15vh;
  margin-left: 25vh;
  margin-right: 25vh; 
  margin-bottom: 25vh;
+}
+.login-background{
+  background-image: url('./circle-scatter-haikei.svg');
+  height: 100vh !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+input:focus{
+  outline: none;
+}
+input{
+  padding: 10px;
 }

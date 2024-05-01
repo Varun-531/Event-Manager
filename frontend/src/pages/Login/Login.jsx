@@ -1,11 +1,13 @@
-import React from "react";
+import React,{useState} from "react";
 import "./Login.css";
 import LoginSvg from "./Login.svg"
 
+
 const Login = () => {
+  const [login,setLogin] = useState(true);
   return (
-    <>
-      <div className="login-container flex gap-7 justify-center items-center">
+    <div className="login-background h-full flex justify-center">
+      <div className="login-container flex gap-7 justify-center items-center bg-orange-100 rounded p-14">
       <img src={LoginSvg} alt="svg" className="h-2/3"/>
         <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
           <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -30,7 +32,7 @@ const Login = () => {
                     type="email"
                     autocomplete="email"
                     required
-                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    class="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -46,7 +48,7 @@ const Login = () => {
                   <div class="text-sm">
                     <a
                       href="#"
-                      class="font-semibold text-indigo-600 hover:text-indigo-500"
+                      class="font-semibold text-orange-500 hover:text-orange-400"
                     >
                       Forgot password?
                     </a>
@@ -59,7 +61,7 @@ const Login = () => {
                     type="password"
                     autocomplete="current-password"
                     required
-                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -67,7 +69,7 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  class="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Sign in
                 </button>
@@ -78,7 +80,7 @@ const Login = () => {
               Not a member?
               <a
                 href="/register"
-                class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                class="font-semibold leading-6 text-orange-500 hover:text-orange-400"
               >
                 {" "}
                 Register
@@ -87,7 +89,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
