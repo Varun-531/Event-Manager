@@ -1,0 +1,9 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.container-1{
+    background-color: rgb(127, 122, 158);
+    height: 90vh;
+    color: white;
+}
