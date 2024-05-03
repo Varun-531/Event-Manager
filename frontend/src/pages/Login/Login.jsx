@@ -3,6 +3,8 @@ import "./Login.css";
 import axios from "axios";
 import toast from "react-hot-toast";
 import LoginSvg from "./Login.svg";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +12,8 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [login, setLogin] = useState(true);
+  const [cookies, setCookie] = useCookies(["token", "userId"]);
+  const navigate = useNavigate();
 
   const handleLogin = (event) => {
     event.preventDefault(); // Prevent default form submission
@@ -18,6 +22,19 @@ const Login = () => {
       .then((res) => {
         console.log(res.data);
         toast.success("Logged in successfully");
+        setCookie(
+          "token",
+          res.data.token,
+          { path: "/" },
+          { maxAge: 60 * 60 * 24 }
+        );
+        setCookie(
+          "userId",
+          res.data.userId,
+          { path: "/" },
+          { maxAge: 60 * 60 * 24 }
+        );
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -36,6 +53,8 @@ const Login = () => {
       .then((res) => {
         console.log(res.data);
         toast.success("Registered successfully");
+        setLogin(true);
+        setPassword("");
       })
       .catch((err) => {
         console.error(err);

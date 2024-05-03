@@ -28,8 +28,8 @@ app.post("/login", async (req, res) => {
     if (!match) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    const token = jwt.sign()
-    return res.json(user);
+    const token = jwt.sign({ id: user.id }, "secret", { expiresIn: "1h" });
+    return res.json({ success: true, token, userId: user.id });
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -59,7 +59,6 @@ app.post("/register", async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 
 app.listen(4000, () => {
   console.log("Server is running on port 4000");

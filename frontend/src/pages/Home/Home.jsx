@@ -4,15 +4,18 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <>
-      <nav>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-      </nav>
-      <div className="container-1 flex justify-center items-center">
+      <div className="container-1 p-4">
+        <nav className="list-none flex gap-3 float-right">
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+          <li>
+            <Link to="/dashboard">Dashboard</Link>
+          </li>
+        </nav>
         <h1>Home</h1>
       </div>
     </>
