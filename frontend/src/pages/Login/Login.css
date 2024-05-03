@@ -20,3 +20,12 @@ input:focus{
 input{
   padding: 10px;
 }
+.temp{
+  width:27vw;
+}
+
+.div2{
+  margin: 0px;
+  padding: 0px;
+  height: 9vh;
+}
