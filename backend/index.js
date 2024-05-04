@@ -6,14 +6,14 @@ const User = require("./models/User");
 const Event = require("./models/Event");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
-const cloudinary = require('cloudinary').v2;
-          
-cloudinary.config({ 
-  cloud_name: 'dp1gjfgmg', 
-  api_key: '973866118168666', 
-  api_secret: 'hJTdoFtZiFavz4kS10rjKihjrOY' 
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dp1gjfgmg",
+  api_key: "973866118168666",
+  api_secret: "hJTdoFtZiFavz4kS10rjKihjrOY",
 });
 
 const app = express();
@@ -71,19 +71,28 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/add-event", upload.single('image'), async (req, res) => {
-  console.log("testing")
-  const { title, description, location, date, time, size, creator, termsAndConditions, category } = req.body;
+app.post("/add-event", upload.single("image"), async (req, res) => {
+  console.log("testing");
+  const {
+    title,
+    description,
+    location,
+    date,
+    time,
+    size,
+    creator,
+    termsAndConditions,
+    category,
+  } = req.body;
   const image = req.file ? req.file.path : null;
   try {
-      let imageUrl = null;
-      if(image){
-        console.log("Uploading Image");
-        const result = await cloudinary.uploader.upload(image);
-        console.log("Image Uploaded");
-        imageUrl = result.url;
-      }
-
+    let imageUrl = null;
+    if (image) {
+      console.log("Uploading Image");
+      const result = await cloudinary.uploader.upload(image);
+      console.log("Image Uploaded");
+      imageUrl = result.url;
+    }
 
     const newEvent = new Event({
       title,
@@ -94,7 +103,7 @@ app.post("/add-event", upload.single('image'), async (req, res) => {
       size,
       creator,
       termsAndConditions,
-      image:imageUrl,
+      image: imageUrl,
       category,
     });
     await newEvent.save();
@@ -102,6 +111,16 @@ app.post("/add-event", upload.single('image'), async (req, res) => {
     return res.json(newEvent);
   } catch (error) {
     console.error("Error during event creation:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/fetch-events", async (req, res) => {
+  try {
+    const events = await Event.find();
+    return res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
