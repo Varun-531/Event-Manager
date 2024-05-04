@@ -1,0 +1,45 @@
+.ce-img{
+    width: 50vw;
+}
+textarea:focus,select:focus{
+    outline: none;
+    padding: 10px;
+    /* resize: none; */
+}
+input,textarea,select{
+    width: 10vw;
+}
+body{
+    background-color: #be123c;
+}
+#size,#category,#time,#date{
+    width: 10vw;
+}
+.temp-1{
+    justify-content: space-between;
+    margin:0 10px 0 10px;
+}
+#category{
+    /* width: 10vw;
+     */
+     height: 5.5vh;
+     padding: 0;
+     padding-left: 5px;
+}
+textarea,select{
+    padding: 10px;
+}
+.div-img{
+    background-image: url(./pexels-arts-1547813.jpg);
+    width: 50vw;
+    background-position: center;
+    background-size: cover;
+    padding: 0;
+    margin: 0;
+}
+#time{
+    text-align: center;
+}
+textarea{
+    resize: none;
+}

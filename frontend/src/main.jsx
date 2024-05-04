@@ -6,6 +6,7 @@ import Home from "./pages/Home/Home.jsx";
 import toast, { Toaster } from "react-hot-toast";
 import Login from "./pages/Login/Login.jsx";
 import Register from "./pages/Register/Register.jsx";
+import CreateEvent from "./pages/CreateEvent/CreateEvent.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "/create-event",
+        element: <CreateEvent />,
       },
     ],
   },

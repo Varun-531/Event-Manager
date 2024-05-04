@@ -15,6 +15,9 @@ const Home = () => {
           <li>
             <Link to="/dashboard">Dashboard</Link>
           </li>
+          <li>
+            <Link to="/create-event">Add Event</Link>
+          </li>
         </nav>
         <h1>Home</h1>
       </div>
