@@ -1,0 +1,42 @@
+.event-slider {
+    margin-bottom: 20px;
+}
+  
+.event-slide {
+    padding: 0 10px;
+}
+  
+.event-article {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative; /* Ensure relative positioning for absolute positioning */
+}
+
+.event-image {
+    width: 30vw;
+    height: 30vh;
+    transition: filter 0.5s ease; /* Apply transition effect to filter property */
+}
+
+.event-image:hover {
+    filter: brightness(70%); /* Darken the image on hover */
+}
+
+.location-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    opacity: 0; /* Initially hide location */
+    visibility: hidden; /* Initially hide location */
+    transition: opacity 0.5s ease; /* Apply transition effect to opacity */
+}
+  
+.event-article:hover .location-container {
+    opacity:1; 
+    visibility: visible; 
+}

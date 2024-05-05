@@ -68,7 +68,7 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="bg-slate-200 p-10 bg-rose-800">
+    <div className="p-10 bg-rose-800">
       <div className="bg-rose-100   rounded">
         <div className="flex justify-center">
           <div className="w-1/2 p-10">
@@ -155,7 +155,7 @@ const CreateEvent = () => {
                     type="number"
                     id="size"
                     min={1}
-                    max={12}
+                    // max={12}
                     className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                     value={size}
                     onChange={(e) => setSize(e.target.value)}
@@ -172,6 +172,7 @@ const CreateEvent = () => {
                     className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                     onChange={(e) => setCategory(e.target.value)}
                   >
+                    <option value="">Category</option>
                     <option value="Music">Music</option>
                     <option value="Sports">Sports</option>
                     <option value="Education">Education</option>

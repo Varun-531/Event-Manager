@@ -4,6 +4,12 @@
 }
 .container-1{
     background-color: rgb(127, 122, 158);
-    height: 100vh;
+    height: 80vh;
     color: white;
+}
+.home-button{
+    border: 2px solid white;
+    padding: 5px;
+    border-radius: 5px;
+    width: 120px;
 }
