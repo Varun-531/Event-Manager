@@ -80,6 +80,8 @@ app.post("/add-event", upload.single("image"), async (req, res) => {
     date,
     time,
     size,
+    public,
+    private,
     creator,
     termsAndConditions,
     category,
@@ -101,6 +103,8 @@ app.post("/add-event", upload.single("image"), async (req, res) => {
       date,
       time,
       size,
+      private,
+      public,
       creator,
       termsAndConditions,
       image: imageUrl,
@@ -121,6 +125,20 @@ app.get("/fetch-events", async (req, res) => {
     return res.json(events);
   } catch (error) {
     console.error("Error fetching events:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/fetch-event/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const event = await Event.findById(id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    return res.json(event);
+  } catch (error) {
+    console.error("Error fetching event:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });

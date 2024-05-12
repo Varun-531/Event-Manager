@@ -19,6 +19,8 @@ const CreateEvent = () => {
   const [size, setSize] = useState(0);
   const [category, setCategory] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState("");
+  const [publicEvent, setPublicEvent] = useState(false);
+  const [privateEvent, setPrivateEvent] = useState(false);
 
   const handleFileChange = (e) => {
     toast.success("Image Set");
@@ -45,6 +47,8 @@ const CreateEvent = () => {
     formData.append("size", size);
     formData.append("creator", userId);
     formData.append("category", category);
+    formData.append("public", publicEvent);
+    formData.append("private", privateEvent);
     formData.append("termsAndConditions", termsAndConditions);
 
     try {
@@ -65,6 +69,15 @@ const CreateEvent = () => {
       toast.error("Error creating event", error.message);
       console.error("Error creating event:", error);
     }
+  };
+  const handlePublicCheckboxClick = () => {
+    setPublicEvent(true);
+    setPrivateEvent(false);
+  };
+
+  const handlePrivateCheckboxClick = () => {
+    setPublicEvent(false);
+    setPrivateEvent(true);
   };
 
   return (
@@ -109,6 +122,33 @@ const CreateEvent = () => {
                 cols="30"
                 rows="05"
               ></textarea>
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Availability
+              </label>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={publicEvent}
+                    onClick={handlePublicCheckboxClick}
+                  />
+                  <label className="block text-sm font-medium leading-6 text-gray-900">
+                    Public
+                  </label>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <input
+                    type="checkbox"
+                    checked={privateEvent}
+                    onClick={handlePrivateCheckboxClick}
+                  />
+                  <label className="block text-sm font-medium leading-6 text-gray-900">
+                    Private
+                  </label>
+                </div>
+              </div>
               <label className="block text-sm font-medium leading-6 text-gray-900">
                 Location
               </label>
@@ -176,6 +216,7 @@ const CreateEvent = () => {
                     <option value="Music">Music</option>
                     <option value="Sports">Sports</option>
                     <option value="Education">Education</option>
+                    <option value="Technology">Technology</option>
                     <option value="Games">Games</option>
                     <option value="Entertainment">Entertainment</option>
                     <option value="Other">Other</option>

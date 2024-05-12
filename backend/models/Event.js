@@ -47,6 +47,14 @@ const eventSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
+  public: {
+    type: Boolean,
+    required: true,
+  },
+  private: {
+    type: Boolean,
+    required: true,
+  },
   // latitude: {
   //   type: Number,
   //   required: true,
