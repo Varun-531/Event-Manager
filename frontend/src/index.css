@@ -13,6 +13,15 @@ body {
   box-sizing: border-box;
 }
 h2{
-  font-size: 2rem;
-  
+  font-size: 1.5rem;
+}
+h1{
+  font-size: 3rem;
+}
+p{
+  font-size: 0.9rem;
+}
+i{
+  font-size: 1.3rem;
+  color: gray;
 }

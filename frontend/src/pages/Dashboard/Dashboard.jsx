@@ -60,6 +60,18 @@ const Dashboard = () => {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
+  var settings1 = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    // nextArrow: <SampleNextArrow />,
+    // prevArrow: <SamplePrevArrow />,
+  };
+
   const [eventList, setEventList] = useState([]);
   useEffect(() => {
     axios
@@ -72,6 +84,22 @@ const Dashboard = () => {
         console.error("Error fetching events:", error);
       });
   }, []);
+  const getTopEventsNearDate = () => {
+    const currentDate = new Date();
+    const filteredEvents = eventList.filter((event) => {
+      const eventDate = new Date(event.date);
+      return eventDate >= currentDate;
+    });
+    filteredEvents.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA - dateB;
+    });
+
+    return filteredEvents.slice(0, 3);
+  };
+
+  const topEventsNearDate = getTopEventsNearDate();
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -85,14 +113,41 @@ const Dashboard = () => {
 
   return (
     <div className="w-[100vw] mx-[10vh]">
-      <h1 className="w-1/2">Explore the events happening around you</h1>
+      <h3 className="w-1/2 my-5">Explore the events happening around you</h3>
       <div className="w-[80vw] mx-[5vw] mt-5">
-      <h1>All Events</h1>
+        <h3>Closing time</h3>
+        {topEventsNearDate.length > 0 ? (
+          <Slider {...settings1} className="event-slider1 my-6">
+            {topEventsNearDate.map((event) => (
+              <div key={event.id} className="event-slide">
+                <article
+                  className="event-article1 flex flex-col items-center"
+                  onClick={handleEvent(event._id)}
+                >
+                  <h3 className="absolute z-10 text-slate-300">
+                    {event.title}
+                  </h3>
+                  <img
+                    src={event.image}
+                    alt={event.name}
+                    className="event-image1 relative"
+                  />
+                </article>
+              </div>
+            ))}
+          </Slider>
+        ) : (
+          <h3>No events available</h3>
+        )}
+        <h3>All Events</h3>
         {eventList.length > 0 ? (
           <Slider {...settings} className="event-slider my-6">
             {eventList.map((event) => (
               <div key={event.id} className="event-slide">
-                <article className="event-article flex flex-col items-center" onClick={handleEvent(event._id)}>
+                <article
+                  className="event-article flex flex-col items-center"
+                  onClick={handleEvent(event._id)}
+                >
                   <img
                     src={event.image}
                     alt={event.name}
@@ -102,13 +157,13 @@ const Dashboard = () => {
                     <p>{formatDate(event.date)}</p>
                     {event.location}
                   </div>
-                  <h1>{event.title}</h1>
+                  <h3>{event.title}</h3>
                 </article>
               </div>
             ))}
           </Slider>
         ) : (
-          <h1>No events available</h1>
+          <h3>No events available</h3>
         )}
       </div>
     </div>

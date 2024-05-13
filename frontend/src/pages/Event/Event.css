@@ -1,0 +1,20 @@
+.image{
+    width: 60vw;
+    height: 60vh;
+    border-radius: 5px;
+}
+.image-container{
+    padding-right: 10px;
+    /* border-right: 1.5px solid gray; */
+    width: fit-content;
+}
+.details{
+    padding: 10px;
+    border: 1.5px solid gray;
+    border-radius: 5px;
+    width: 40vw;
+    height: fit-content;
+}
+.details p{
+    /* color: gray; */
+}
