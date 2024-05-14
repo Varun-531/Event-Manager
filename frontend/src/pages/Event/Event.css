@@ -10,11 +10,21 @@
 }
 .details{
     padding: 10px;
-    border: 1.5px solid gray;
+    border: 2px solid #767B91;
     border-radius: 5px;
-    width: 40vw;
+    width: 30vw;
     height: fit-content;
 }
 .details p{
     /* color: gray; */
+}
+body{
+    background-color:#FCFCFC;
+}
+.svg{
+    width: 10vw;
+    height: auto;
+}
+#bookmark{
+
 }

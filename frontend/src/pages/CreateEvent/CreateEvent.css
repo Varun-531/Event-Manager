@@ -44,9 +44,20 @@ select {
   padding: 0;
   margin: 0;
 }
-#time {
-  text-align: center;
-}
+
 textarea {
   resize: none;
+}
+input[type="time"] {
+  width: 10vw;
+  text-align: center;
+  /* padding: 10px; */
+}
+select:focus{
+  resize: none;
+  padding: 8px;
+}
+#price,#pincode{
+  width: 10vw;
+  /* padding: 10px; */
 }

@@ -79,9 +79,11 @@ app.post("/add-event", upload.single("image"), async (req, res) => {
     location,
     date,
     time,
+    pincode,
+    endTime,
+    price,
     size,
-    public,
-    private,
+    availability,
     creator,
     termsAndConditions,
     category,
@@ -102,10 +104,12 @@ app.post("/add-event", upload.single("image"), async (req, res) => {
       location,
       date,
       time,
+      endTime,
+      pincode,
       size,
-      private,
-      public,
+      availability,
       creator,
+      price,
       termsAndConditions,
       image: imageUrl,
       category,
@@ -139,6 +143,21 @@ app.get("/fetch-event/:id", async (req, res) => {
     return res.json(event);
   } catch (error) {
     console.error("Error fetching event:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+//fetch user from id
+app.get("/fetch-user/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });

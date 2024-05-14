@@ -15,8 +15,12 @@ const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [price, setPrice] = useState(0);
+  const [availability, setAvailability] = useState("");
   const [location, setLocation] = useState("");
   const [size, setSize] = useState(0);
+  const [pincode,setPincode] = useState(0);
   const [category, setCategory] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState("");
   const [publicEvent, setPublicEvent] = useState(false);
@@ -43,12 +47,14 @@ const CreateEvent = () => {
     formData.append("description", description);
     formData.append("date", date);
     formData.append("time", time);
+    formData.append("endTime", endTime);
+    formData.append("availability", availability);
     formData.append("location", location);
     formData.append("size", size);
+    formData.append("pincode",pincode);
     formData.append("creator", userId);
     formData.append("category", category);
-    formData.append("public", publicEvent);
-    formData.append("private", privateEvent);
+    formData.append("price", price);
     formData.append("termsAndConditions", termsAndConditions);
 
     try {
@@ -89,7 +95,6 @@ const CreateEvent = () => {
               onSubmit={handleSubmit}
               className="flex flex-col w-3/4 ml-10 gap-y-2"
             >
-              {" "}
               <h1 className="text-xl font-medium">Add Event</h1>
               <label className="block text-sm font-medium leading-6 text-gray-900">
                 Title
@@ -122,31 +127,34 @@ const CreateEvent = () => {
                 cols="30"
                 rows="05"
               ></textarea>
-              <label className="block text-sm font-medium leading-6 text-gray-900">
-                Availability
-              </label>
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-around" }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={publicEvent}
-                    onClick={handlePublicCheckboxClick}
-                  />
+              <div className="flex temp-1">
+                <div>
                   <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Public
+                    Availability
                   </label>
+                  <select
+                    value={availability}
+                    id="availability"
+                    className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                    onChange={(e) => setAvailability(e.target.value)}
+                  >
+                    <option value="">Availability</option>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
                 </div>
-                <div style={{ display: "flex" }}>
-                  <input
-                    type="checkbox"
-                    checked={privateEvent}
-                    onClick={handlePrivateCheckboxClick}
-                  />
+                <div>
                   <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Private
+                    Date
                   </label>
+
+                  <input
+                    type="date"
+                    value={date}
+                    id="date"
+                    className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                    onChange={(e) => setDate(e.target.value)}
+                  />
                 </div>
               </div>
               <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -162,27 +170,26 @@ const CreateEvent = () => {
               <div className="flex temp-1">
                 <div>
                   <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Date
+                    Start Time
                   </label>
-
                   <input
-                    type="date"
-                    value={date}
-                    id="date"
+                    type="time"
+                    id="time"
                     className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => setDate(e.target.value)}
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Time
+                    End Time
                   </label>
                   <input
                     type="time"
-                    value={time}
-                    id="time"
+                    id="endtime"
                     className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => setTime(e.target.value)}
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
                   />
                 </div>
               </div>
@@ -222,6 +229,32 @@ const CreateEvent = () => {
                     <option value="Other">Other</option>
                   </select>
                 </div>
+              </div>
+              <div className="temp-1 flex">
+              <div><label className="block text-sm font-medium leading-6 text-gray-900">
+                Price
+              </label>
+              <input
+                type="number"
+                id="price"
+                min={0}
+                className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              /></div>
+              <div>
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Pincode
+              </label>
+              <input
+                type="number"
+                id="pincode"
+                min={0}
+                className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+              />
+              </div>
               </div>
               <label className="block text-sm font-medium leading-6 text-gray-900">
                 Terms and Conditions

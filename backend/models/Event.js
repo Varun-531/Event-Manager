@@ -31,6 +31,10 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  endTime:{
+    type:String,
+    required:true
+  },
   size: {
     type: Number,
     required: true,
@@ -47,22 +51,18 @@ const eventSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  public: {
-    type: Boolean,
-    required: true,
+  pincode:{
+    type:Number,
+    required:true,
   },
-  private: {
-    type: Boolean,
-    required: true,
+  availability:{
+    type:String,
+    required:true,
   },
-  // latitude: {
-  //   type: Number,
-  //   required: true,
-  // },
-  // longitude: {
-  //   type: Number,
-  //   required: true,
-  // },
+  price:{
+    type:Number,
+    required:true,
+  },
   category: {
     type: String,
     required: true,
