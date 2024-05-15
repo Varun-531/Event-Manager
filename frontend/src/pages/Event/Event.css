@@ -16,7 +16,7 @@
     height: fit-content;
 }
 .details p{
-    /* color: gray; */
+    
 }
 body{
     background-color:#FCFCFC;
@@ -24,7 +24,11 @@ body{
 .svg{
     width: 10vw;
     height: auto;
+    padding: 10px;
 }
 #bookmark{
 
+}
+.booked{
+    border:  2px solid #db2777;
 }

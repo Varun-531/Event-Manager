@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import {Link} from "react-router-dom";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -68,8 +69,6 @@ const Dashboard = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    // nextArrow: <SampleNextArrow />,
-    // prevArrow: <SamplePrevArrow />,
   };
 
   const [eventList, setEventList] = useState([]);
@@ -112,6 +111,7 @@ const Dashboard = () => {
   };
 
   return (
+    <>
     <div className="w-[100vw] mx-[10vh]">
       <h3 className="w-1/2 my-5">Explore the events happening around you</h3>
       <div className="w-[80vw] mx-[5vw] mt-5">
@@ -166,7 +166,31 @@ const Dashboard = () => {
           <h3>No events available</h3>
         )}
       </div>
+        <Link to={`/userboard`}>UserBoard</Link>
+        <Slider {...settings} className="event-slider my-6 w-[80vw] mx-[5vw] mt-5">
+            {eventList.map((event) => (
+              <div key={event.id} className="event-slide">
+                <article
+                  className="event-article flex flex-col items-center"
+                  onClick={handleEvent(event._id)}
+                >
+                  <img
+                    src={event.image}
+                    alt={event.name}
+                    className="event-image"
+                  />
+                  <div className="location-container">
+                    <p>{formatDate(event.date)}</p>
+                    {event.location}
+                  </div>
+                  <h3>{event.title}</h3>
+                </article>
+              </div>
+            ))}
+          </Slider>
+        
     </div>
+    </>
   );
 };
 

@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 6,
     },
+    events:{
+      type:[String]
+    }
   },
   {
     timestamps: true,

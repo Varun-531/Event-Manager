@@ -1,197 +1,77 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "axios";
-// import "./Event.css";
-// import popcorn from "./popcorn-svgrepo-com.svg";
-// import satelite from "./satellite-svgrepo-com.svg";
-// import football from "./cricket-game-svgrepo-com.svg";
-// import music from "./music-svgrepo-com.svg";
-// import dice from "./game-die-svgrepo-com.svg";
-// import book from "./books-svgrepo-com.svg";
-// import other from "./celebrate-svgrepo-com.svg";
-
-// const Event = () => {
-//   const [event, setEvent] = useState({});
-//   const [user, setUser] = useState({});
-//   // const [price,setPrice] = useState("");
-//   const { id } = useParams();
-
-//   useEffect(() => {
-//     axios
-//       .get(`http://localhost:4000/fetch-event/${id}`)
-//       .then((res) => {
-//         setEvent(res.data);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   }, [id]);
-//   useEffect(() => {
-//     if (event && event.creator) {
-//       axios
-//         .get(`http://localhost:4000/fetch-user/${event.creator}`)
-//         .then((res) => {
-//           console.log(res);
-//           console.log(res.data);
-//           setUser(res.data);
-//         })
-//         .catch((err) => {
-//           console.log(err);
-//         });
-//     }
-//   }, [event]);
-
-//   // Function to determine whether the event is public or private
-//   const determinePrivacy = () => {
-//     if (event.public) {
-//       return "Public";
-//     } else if (event.private) {
-//       return "Private";
-//     } else {
-//       return "Unknown"; // Handle the case where neither public nor private is specified
-//     }
-//   };
-//   let svgimg = "";
-//   if (event.category === "Entertainment") {
-//     svgimg = popcorn;
-//   } else if (event.category === "Sports") {
-//     svgimg = football;
-//   } else if (event.category === "Music") {
-//     svgimg = music;
-//   } else if (event.category === "Games") {
-//     svgimg = dice;
-//   } else if (event.category === "Education") {
-//     svgimg = book;
-//   } else if (event.category === "Technology") {
-//     svgimg = satelite;
-//   } else {
-//     svgimg = other;
-//   }
-
-//   // Function to format the date
-//   const formatDate = (dateString) => {
-//     const date = new Date(dateString);
-//     return date.toLocaleDateString(); // Adjust the format as needed
-//   };
-//   let occupancy = event.size - (event.attendees?.length || 0);
-
-
-
-
-//   return (
-//     <div className="">
-//       <div className="m-10 mx-20">
-//         <div className="flex gap-3">
-//           <div className="image-container">
-//             <img src={event.image} className="image" alt="Event" />
-//           </div>
-//           <div className="">
-//             <div className="details flex items-center justify-around">
-//               <div className="flex flex-col gap-2">
-//                 <h2 className="font-semibold absolute">{event.title}</h2>
-//                 <div className="flex gap-2 items-center pt-10">
-//                   <i className="fi fi-rr-bookmark text-lg" id="bookmark"></i>
-//                   <p>{event.category}</p>
-//                 </div>
-//                 <div className="flex gap-2 items-center">
-//                   <i className="fi fi-rr-earth-americas"></i>
-//                   <p>{event.availability}</p>
-//                 </div>
-//                 <div className="flex gap-2 items-center">
-//                   <i className="fi fi-rr-calendar-day"></i>
-//                   <p>{formatDate(event.date)}</p>
-//                   <p>{event.time}</p>
-//                 </div>
-//                 <div className="flex gap-2 items-center">
-//                   <i class="fi fi-rr-marker"></i>
-//                   <p>{event.location}</p>
-//                 </div>
-//               </div>
-//               <div className="">
-//                 <img src={svgimg} className="svg" />
-//               </div>
-//             </div>
-//             <div className="mt-3 details">
-//               <div className="flex gap-2 items-center ml-3">
-//                 <i class="fi fi-rr-user"></i>
-//                 <p>{user.username}</p>
-//               </div>
-//               <div className="flex gap-2 items-center ml-3">
-//               <i class="fi fi-rr-chair"></i>
-//                 <p>{event.size - event.attendees.length}</p>
-//               </div>
-//               <div className="flex gap-2 items-center ml-3">
-//               <i class="fi fi-rr-ticket"></i>
-//                 <p>{occupancy}</p>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Event;
-
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./Event.css";
-// Importing SVGs directly might require a specific loader or import method depending on your setup
+import { useCookies } from "react-cookie";
+import { toast } from "react-hot-toast";
 import popcorn from "./popcorn-svgrepo-com.svg";
 import satelite from "./satellite-svgrepo-com.svg";
 import football from "./cricket-game-svgrepo-com.svg";
 import music from "./music-svgrepo-com.svg";
 import dice from "./game-die-svgrepo-com.svg";
-import book from "./books-svgrepo-com.svg";
+import bookSvg from "./books-svgrepo-com.svg";
 import other from "./celebrate-svgrepo-com.svg";
 
 const Event = () => {
-  // Initialize event with an empty attendees array to prevent undefined errors
   const [event, setEvent] = useState({ attendees: [] });
-  const [user, setUser] = useState({});
+  const [creator, setCreator] = useState({});
+  const [bookOption, setBookOption] = useState("");
+  const [occupancy,setOccupancy] = useState(0);
+  const[Booked,setBooked] = useState(false);
+  const [bookText, setBookText] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const { id } = useParams();
+  const [cookies] = useCookies(["userId"]);
+  const userId = cookies.userId;
 
-  // Fetch event data
   useEffect(() => {
     axios
       .get(`http://localhost:4000/fetch-event/${id}`)
       .then((res) => {
-        console.log(res.data);
         setEvent(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Error fetching event data:", err);
       });
   }, [id]);
 
-  // Fetch user data based on the event creator
   useEffect(() => {
     if (event.creator) {
       axios
         .get(`http://localhost:4000/fetch-user/${event.creator}`)
         .then((res) => {
-          setUser(res.data);
+          setCreator(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          console.error("Error fetching user data:", err);
         });
     }
-  }, [event.creator]); // Depend on event.creator to avoid unnecessary requests
+  }, [event.creator]);
+  useEffect(() => {
+    setBookOption(event.availability === "Public" ? "Book" : "Request");
+    const occupancyValue = event.size - (event.attendees?.length || 0);
+    setOccupancy(occupancyValue);
+  }, [event.availability, event.attendees, event.size]);
 
-  // Function to determine event privacy
-  const determinePrivacy = () => {
-    if (event.public) {
-      return "Public";
-    } else if (event.private) {
-      return "Private";
+  useEffect(() => {
+    if (event.attendees?.includes(userId)) {
+      setBooked(true);
+      setBookText("Booked");
     }
-    return "Unknown"; // Handle case where neither public nor private is specified
-  };
+    else if(event.creator===userId){
+      setBooked(true);
+      setBookText("Creator");
+    }
+    else if(event.requests?.includes(userId)){
+      setBooked(true);
+      setBookText("Requested");
+    }
+  },[
+    event.attendees,
+    userId,
+  ]);
+  
 
-  // Function to select SVG based on category
   const selectSVG = (category) => {
     switch (category) {
       case "Entertainment":
@@ -203,7 +83,7 @@ const Event = () => {
       case "Games":
         return dice;
       case "Education":
-        return book;
+        return bookSvg;
       case "Technology":
         return satelite;
       default:
@@ -211,20 +91,54 @@ const Event = () => {
     }
   };
 
-  // Function to format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString(); // Adjust format as needed
+    return date.toLocaleDateString();
   };
 
-  // Calculate occupancy
-  let occupancy = event.size - (event.attendees?.length || 0);
+  const handleClick = () => {
+    if(event.availability === "Public") {
+      axios
+      .post(`http://localhost:4000/book-event`, {
+        eventId: id,
+        userId: userId,
+      })
+      .then((res) => {
+        console.log("Booking successful:", res.data);
+        toast.success("Booking successful");
+        setOccupancy(occupancy - 1);
+        setBooked(true);
+        setBookText("Booked");
+      })
+      .catch((err) => {
+        console.error("Error booking event:", err);
+        toast.error("Error booking event");
+      });
+    }
+    else{
+      axios.post(`http://localhost:4000/add-request`,{
+        eventId:id,
+        to:event.creator,
+        from:userId
+      })
+      .then((res)=>{
+        console.log("Request sent:",res.data);
+        toast.success("Request sent");
+        setBooked(true);
+        setBookText("Requested")
+      })
+      .catch((err)=>{
+        console.error("Error sending request:",err);
+        toast.error("Error sending request");
+      })
+    }
+  };
 
-  let cost = 0;
-  if(event.price == 0)
-      cost = "Free";
-  else 
-    cost = event.price;
+  
+
+  const handleBookClick = () => {
+    setShowConfirmation(true);
+  };
 
   return (
     <div className="">
@@ -256,29 +170,95 @@ const Event = () => {
                 </div>
               </div>
               <div className="">
-                <img src={selectSVG(event.category)} className="svg" />
+                <img
+                  src={selectSVG(event.category)}
+                  className="svg"
+                  alt="Category SVG"
+                />
               </div>
             </div>
-            <div className="mt-3 details">
-              <div className="flex gap-2 items-center ml-3">
-                <i className="fi fi-rr-user"></i>
-                <p>{user.username}</p>
+            <div className="mt-3 details flex justify-between items-center">
+              <div className="flex flex-col">
+                <div className="flex gap-2 items-center ml-3">
+                  <i className="fi fi-rr-user"></i>
+                  <p>{creator.username}</p>
+                </div>
+                <div className="flex gap-2 items-center ml-3">
+                  <i className="fi fi-rr-chair"></i>
+                  <p>{occupancy} left</p>
+                </div>
+                <div className="flex gap-2 items-center ml-3">
+                  <i className="fi fi-rr-ticket"></i>
+                  <p>{event.price === 0 ? "Free" : event.price}</p>
+                </div>
               </div>
-              <div className="flex gap-2 items-center ml-3">
-                <i className="fi fi-rr-chair"></i>
-                <p>{event.size - (event.attendees?.length || 0)} left</p>
-              </div>
-              <div className="flex gap-2 items-center ml-3">
-                <i className="fi fi-rr-ticket"></i>
-                <p>{cost}</p>
-              </div>
+              {Booked ? (<div
+                className="m-3 booked text-pink-600 font-semibold p-3 cursor-not-allowed rounded shadow-slate-700 "
+                // onClick={handleBookClick}
+              >
+                 {bookText}
+              </div>):(<div
+                className="m-3 bg-pink-600 text-slate-100 font-semibold p-3 cursor-pointer rounded shadow-slate-700 hover:bg-pink-700"
+                onClick={handleBookClick}
+              >
+                {bookOption} a Ticket
+              </div>)}
             </div>
           </div>
         </div>
+        <div className="mt-3">
+          <h3 className="font-semibold underline underline-offset-4">About</h3>
+          <p>{event.description}</p>
+          <p className="mt-3">
+            {event.time} - {event.endTime}
+          </p>
+          <p>{event.location}</p>
+          <p className="mb-3">{event.pincode}</p>
+        </div>
+        <div>
+          <h3 className="font-semibold underline underline-offset-4">
+            Terms and Conditions
+          </h3>
+          <ul>
+            {event.termsAndConditions &&
+              event.termsAndConditions
+                .split("\n")
+                .filter(Boolean)
+                .map((item, index) => (
+                  <li key={index} className="list-disc points">
+                    {item}
+                  </li>
+                ))}
+          </ul>
+        </div>
       </div>
+      {showConfirmation && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold mb-4">Confirm Booking</h2>
+            <p>Are you sure you want to book a ticket for this event?</p>
+            <div className="flex justify-center mt-6">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-4"
+                onClick={() => {
+                  setShowConfirmation(false);
+                  handleClick();
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="bg-gray-400 text-black px-4 py-2 rounded-md"
+                onClick={() => setShowConfirmation(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Event;
-

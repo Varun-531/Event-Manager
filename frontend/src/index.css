@@ -12,6 +12,9 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+h3{
+  font-size: 1.2rem;
+}
 h2{
   font-size: 1.5rem;
 }
@@ -39,4 +42,9 @@ input[type=number] {
 }
 input:focus,textArea:focus,select:focus{
   resize: none;
+}
+.points{
+  font-size: 0.9rem;
+  margin: 10px;
+  font-weight: 500;
 }

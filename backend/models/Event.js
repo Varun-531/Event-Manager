@@ -48,7 +48,7 @@ const eventSchema = new mongoose.Schema({
     required: true,
   },
   termsAndConditions: {
-    type: [String],
+    type: String,
     required: true,
   },
   pincode:{
@@ -67,6 +67,9 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  requests:{
+    type:[String]
+  }
 });
 
 module.exports = mongoose.model("Event", eventSchema);

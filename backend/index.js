@@ -4,8 +4,11 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const User = require("./models/User");
 const Event = require("./models/Event");
+const Request = require("./models/Request");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const multer = require("multer");
+const dotenv = require("dotenv");
 const upload = multer({ dest: "uploads/" });
 
 const cloudinary = require("cloudinary").v2;
@@ -15,7 +18,7 @@ cloudinary.config({
   api_key: "973866118168666",
   api_secret: "hJTdoFtZiFavz4kS10rjKihjrOY",
 });
-
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -26,6 +29,14 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("MongoDB connected successfully");
+});
+
+const transporter = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+    user: process.env.REACT_APP_EMAIL,
+    pass: process.env.REACT_APP_PASSWORD,
+  },
 });
 
 app.post("/login", async (req, res) => {
@@ -147,7 +158,52 @@ app.get("/fetch-event/:id", async (req, res) => {
   }
 });
 
-//fetch user from id
+app.post("/book-event", async (req, res) => {
+  const { eventId, userId } = req.body;
+  try {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (event.size - event.attendees.length === 0) {
+      return res.status(400).json({ message: "Event is full" });
+    }
+    if (event.attendees.includes(userId)) {
+      return res.status(400).json({ message: "You are already registered for this event" });
+    }
+    if (!user.events) {
+      user.events = []; 
+    }
+    if (!user.events.includes(eventId)) {
+      user.events.push(eventId);
+    }
+    await user.save();
+
+    event.attendees.push(userId);
+    await event.save();
+    try {
+      const mailOptions = {
+        from: process.env.REACT_APP_EMAIL,
+        to: user.email,
+        subject: "Event Booking Confirmation",
+        text: `Hi ${user.username}, you have successfully booked the event ${event.title}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error booking event:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.get("/fetch-user/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -158,6 +214,56 @@ app.get("/fetch-user/:id", async (req, res) => {
     return res.json(user);
   } catch (error) {
     console.error("Error fetching user:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/send-mail", async (req, res) => {
+  const { email, subject, message } = req.body;
+  try {
+    const mailOptions = {
+      from: process.env.REACT_APP_EMAIL,
+      to: email,
+      subject,
+      text: message,
+    };
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/add-request", async (req, res) => {
+  const { eventId, to, from } = req.body;
+  try {
+    const newRequest = new Request({
+      eventId,
+      to,
+      from,
+    });
+    await newRequest.save();
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    event.requests.push(from);
+    await event.save(); 
+    return res.json(newRequest);
+  } catch (error) {
+    console.error("Error adding request:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/fetch-requests/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const requests = await Request.find({ to: id });
+    return res.json(requests);
+  } catch (error) {
+    console.error("Error fetching requests:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
