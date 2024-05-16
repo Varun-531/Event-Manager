@@ -21,8 +21,9 @@ const userSchema = new mongoose.Schema(
       min: 6,
     },
     events:{
-      type:[String]
-    }
+      type:[String],
+      required:true
+    },
   },
   {
     timestamps: true,

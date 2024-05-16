@@ -16,8 +16,8 @@ const Event = () => {
   const [event, setEvent] = useState({ attendees: [] });
   const [creator, setCreator] = useState({});
   const [bookOption, setBookOption] = useState("");
-  const [occupancy,setOccupancy] = useState(0);
-  const[Booked,setBooked] = useState(false);
+  const [occupancy, setOccupancy] = useState(0);
+  const [Booked, setBooked] = useState(false);
   const [bookText, setBookText] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { id } = useParams();
@@ -57,20 +57,14 @@ const Event = () => {
     if (event.attendees?.includes(userId)) {
       setBooked(true);
       setBookText("Booked");
-    }
-    else if(event.creator===userId){
+    } else if (event.creator === userId) {
       setBooked(true);
       setBookText("Creator");
-    }
-    else if(event.requests?.includes(userId)){
+    } else if (event.requests?.includes(userId)) {
       setBooked(true);
       setBookText("Requested");
     }
-  },[
-    event.attendees,
-    userId,
-  ]);
-  
+  }, [event.attendees, userId]);
 
   const selectSVG = (category) => {
     switch (category) {
@@ -97,44 +91,43 @@ const Event = () => {
   };
 
   const handleClick = () => {
-    if(event.availability === "Public") {
+    if (event.availability === "Public") {
       axios
-      .post(`http://localhost:4000/book-event`, {
-        eventId: id,
-        userId: userId,
-      })
-      .then((res) => {
-        console.log("Booking successful:", res.data);
-        toast.success("Booking successful");
-        setOccupancy(occupancy - 1);
-        setBooked(true);
-        setBookText("Booked");
-      })
-      .catch((err) => {
-        console.error("Error booking event:", err);
-        toast.error("Error booking event");
-      });
-    }
-    else{
-      axios.post(`http://localhost:4000/add-request`,{
-        eventId:id,
-        to:event.creator,
-        from:userId
-      })
-      .then((res)=>{
-        console.log("Request sent:",res.data);
-        toast.success("Request sent");
-        setBooked(true);
-        setBookText("Requested")
-      })
-      .catch((err)=>{
-        console.error("Error sending request:",err);
-        toast.error("Error sending request");
-      })
+        .post(`http://localhost:4000/book-event`, {
+          eventId: id,
+          userId: userId,
+        })
+        .then((res) => {
+          console.log("Booking successful:", res.data);
+          toast.success("Booking successful");
+          setOccupancy(occupancy - 1);
+          setBooked(true);
+          setBookText("Booked");
+        })
+        .catch((err) => {
+          console.error("Error booking event:", err);
+          toast.error("Error booking event");
+        });
+    } else {
+      axios
+        .post(`http://localhost:4000/add-request`, {
+          eventId: id,
+          to: event.creator,
+          from: userId,
+          // date:event.date,
+        })
+        .then((res) => {
+          console.log("Request sent:", res.data);
+          toast.success("Request sent");
+          setBooked(true);
+          setBookText("Requested");
+        })
+        .catch((err) => {
+          console.error("Error sending request:", err);
+          toast.error("Error sending request");
+        });
     }
   };
-
-  
 
   const handleBookClick = () => {
     setShowConfirmation(true);
@@ -192,17 +185,21 @@ const Event = () => {
                   <p>{event.price === 0 ? "Free" : event.price}</p>
                 </div>
               </div>
-              {Booked ? (<div
-                className="m-3 booked text-pink-600 font-semibold p-3 cursor-not-allowed rounded shadow-slate-700 "
-                // onClick={handleBookClick}
-              >
-                 {bookText}
-              </div>):(<div
-                className="m-3 bg-pink-600 text-slate-100 font-semibold p-3 cursor-pointer rounded shadow-slate-700 hover:bg-pink-700"
-                onClick={handleBookClick}
-              >
-                {bookOption} a Ticket
-              </div>)}
+              {Booked ? (
+                <div
+                  className="m-3 booked text-pink-600 font-semibold p-3 cursor-not-allowed rounded shadow-slate-700 "
+                  // onClick={handleBookClick}
+                >
+                  {bookText}
+                </div>
+              ) : (
+                <div
+                  className="m-3 bg-pink-600 text-slate-100 font-semibold p-3 cursor-pointer rounded shadow-slate-700 hover:bg-pink-700"
+                  onClick={handleBookClick}
+                >
+                  {bookOption} a Ticket
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -158,6 +158,17 @@ app.get("/fetch-event/:id", async (req, res) => {
   }
 });
 
+app.get("/fetch-event-createdby/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const events = await Event.find({ creator: id });
+    return res.json(events);
+  } catch (error) {
+    console.error("Error fetching event:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.post("/book-event", async (req, res) => {
   const { eventId, userId } = req.body;
   try {
@@ -241,12 +252,17 @@ app.post("/add-request", async (req, res) => {
     const newRequest = new Request({
       eventId,
       to,
+      // date,
       from,
     });
     await newRequest.save();
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
+    }
+    //id event.requests already contain the request
+    if (event.requests.includes(from)) {
+      return res.status(400).json({ message: "Request already sent" });
     }
     event.requests.push(from);
     await event.save(); 
@@ -261,6 +277,17 @@ app.get("/fetch-requests/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const requests = await Request.find({ to: id });
+    return res.json(requests);
+  } catch (error) {
+    console.error("Error fetching requests:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/fetch-from-request/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const requests = await Request.find({ from: id });
     return res.json(requests);
   } catch (error) {
     console.error("Error fetching requests:", error);
