@@ -252,7 +252,6 @@ app.post("/add-request", async (req, res) => {
     const newRequest = new Request({
       eventId,
       to,
-      // date,
       from,
     });
     await newRequest.save();
@@ -260,11 +259,14 @@ app.post("/add-request", async (req, res) => {
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
-    //id event.requests already contain the request
     if (event.requests.includes(from)) {
       return res.status(400).json({ message: "Request already sent" });
     }
     event.requests.push(from);
+    if(event.requestsId.includes(newRequest._id)){
+      return res.status(400).json({ message: "Request already sent" });
+    }
+    event.requestsId.push(newRequest._id);
     await event.save(); 
     return res.json(newRequest);
   } catch (error) {

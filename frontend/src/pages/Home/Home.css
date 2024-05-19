@@ -3,8 +3,14 @@
     margin: 0;
 }
 .container-1{
-    background-color: rgb(127, 122, 158);
-    height: 80vh;
+    /* background-color: rgb(16, 7, 76);
+     */
+     background-image: url('./blob-scatter-haikei.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 100vh;
     color: white;
 }
 .home-button{
@@ -12,4 +18,9 @@
     padding: 5px;
     border-radius: 5px;
     width: 120px;
+}
+.home-button:hover{
+    color:#ff0066;
+    font-weight: 500;
+    background-color: white;
 }

@@ -48,3 +48,12 @@ input:focus,textArea:focus,select:focus{
   margin: 10px;
   font-weight: 500;
 }
+::-webkit-scrollbar {
+  width: 0;
+  background-color: white;
+}
+::-webkit-scrollbar-thumb {
+  background:darkgrey;
+  border-radius: 25px;
+  /* border: 1px solid black; */
+}

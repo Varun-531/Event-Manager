@@ -111,7 +111,7 @@ const Dashboard = () => {
   };
 
   return (
-    <>
+    <div className="flex">
     <div className="w-[100vw] mx-[10vh]">
       <h3 className="w-1/2 my-5">Explore the events happening around you</h3>
       <div className="w-[80vw] mx-[5vw] mt-5">
@@ -190,7 +190,8 @@ const Dashboard = () => {
           </Slider>
         
     </div>
-    </>
+    {/* <Link to={`/userboard`}>UserBoard</Link> */}
+    </div>
   );
 };
 

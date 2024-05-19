@@ -54,7 +54,11 @@ const Event = () => {
   }, [event.availability, event.attendees, event.size]);
 
   useEffect(() => {
-    if (event.attendees?.includes(userId)) {
+    if(!userId){
+      setBooked(true);
+      setBookText("Login to book");
+    }
+    else if (event.attendees?.includes(userId)) {
       setBooked(true);
       setBookText("Booked");
     } else if (event.creator === userId) {
@@ -91,41 +95,47 @@ const Event = () => {
   };
 
   const handleClick = () => {
-    if (event.availability === "Public") {
-      axios
-        .post(`http://localhost:4000/book-event`, {
-          eventId: id,
-          userId: userId,
-        })
-        .then((res) => {
-          console.log("Booking successful:", res.data);
-          toast.success("Booking successful");
-          setOccupancy(occupancy - 1);
-          setBooked(true);
-          setBookText("Booked");
-        })
-        .catch((err) => {
-          console.error("Error booking event:", err);
-          toast.error("Error booking event");
-        });
-    } else {
-      axios
-        .post(`http://localhost:4000/add-request`, {
-          eventId: id,
-          to: event.creator,
-          from: userId,
-          // date:event.date,
-        })
-        .then((res) => {
-          console.log("Request sent:", res.data);
-          toast.success("Request sent");
-          setBooked(true);
-          setBookText("Requested");
-        })
-        .catch((err) => {
-          console.error("Error sending request:", err);
-          toast.error("Error sending request");
-        });
+    if(!userId){
+      toast.error("Please login to book the event");
+      return;
+    }
+    else{
+      if (event.availability === "Public") {
+        axios
+          .post(`http://localhost:4000/book-event`, {
+            eventId: id,
+            userId: userId,
+          })
+          .then((res) => {
+            console.log("Booking successful:", res.data);
+            toast.success("Booking successful");
+            setOccupancy(occupancy - 1);
+            setBooked(true);
+            setBookText("Booked");
+          })
+          .catch((err) => {
+            console.error("Error booking event:", err);
+            toast.error("Error booking event");
+          });
+      } else {
+        axios
+          .post(`http://localhost:4000/add-request`, {
+            eventId: id,
+            to: event.creator,
+            from: userId,
+            // date:event.date,
+          })
+          .then((res) => {
+            console.log("Request sent:", res.data);
+            toast.success("Request sent");
+            setBooked(true);
+            setBookText("Requested");
+          })
+          .catch((err) => {
+            console.error("Error sending request:", err);
+            toast.error("Error sending request");
+          });
+      }
     }
   };
 

@@ -69,6 +69,9 @@ const eventSchema = new mongoose.Schema({
   },
   requests:{
     type:[String]
+  },
+  requestsId:{
+    type:[String]
   }
 });
 
