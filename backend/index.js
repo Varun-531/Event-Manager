@@ -297,6 +297,60 @@ app.get("/fetch-from-request/:id", async (req, res) => {
   }
 });
 
+app.post("/decline-request", async (req, res) => {
+  const { requestId } = req.body;
+  try{
+    const request = await Request.findById(requestId);
+    if(!request){
+      return res.status(404).json({message:"Request not found"});
+    }
+    const event = await Event.findById(request.eventId);
+    if(!event){
+      return res.status(404).json({message:"Event not found"});
+    }
+    request.status = "Declined";
+    await request.save();
+  }
+  catch(error){
+    console.error("Error declining request:",error);
+    return res.status(500).json({message:"Internal Server Error"});
+  }
+});
+
+app.post("/accept-request", async (req, res) => {
+  const { requestId } = req.body;
+  try{
+    const request = await Request.findById(requestId);
+    const user = await User.findById(request.from);
+    if(!request){
+      return res.status(404).json({message:"Request not found"});
+    }
+    const event = await Event.findById(request.eventId);
+    if(!event){
+      return res.status(404).json({message:"Event not found"});
+    }
+    if(event.attendees.length === event.size){
+      return res.status(400).json({message:"Event is full"});
+    }
+    if(event.attendees.includes(request.from)){
+      return res.status(400).json({message:"User already registered for this event"});
+    }
+    if(user.events.includes(event._id)){
+      return res.status(400).json({message:"User already registered for this event"});
+    }
+    user.events.push(event._id);
+    await user.save();
+    event.attendees.push(request.from);
+    await event.save();
+    request.status = "Accepted";
+    await request.save();
+  }
+  catch(error){
+    console.error("Error accepting request:",error);
+    return res.status(500).json({message:"Internal Server Error"});
+  }
+});
+
 app.listen(4000, () => {
   console.log("Server is running on port 4000");
 });

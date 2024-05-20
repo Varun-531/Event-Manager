@@ -1,8 +1,10 @@
+// Userboard.js
 import React, { useState, useEffect } from "react";
 import "./Userboard.css";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx"; 
 
 const Userboard = () => {
   const [cookies] = useCookies(["userId"]);
@@ -12,12 +14,14 @@ const Userboard = () => {
   const [eventsData3, setEventsData3] = useState([]);
   const [eventsData4, setEventsData4] = useState([]);
   const [Request, setRequest] = useState([]);
+  const [showRequestsPopup, setShowRequestsPopup] = useState(false);
   const [From, setFrom] = useState([]);
   const [participatingEvents, setParticipatingEvents] = useState([]);
   const [user, setUser] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch user data
     axios
       .get(`http://localhost:4000/fetch-user/${userId}`)
       .then((res) => {
@@ -28,6 +32,7 @@ const Userboard = () => {
         console.error("Error fetching user data:", err);
       });
 
+    // Fetch requests sent from the user
     axios
       .get(`http://localhost:4000/fetch-from-request/${userId}`)
       .then((res) => {
@@ -39,6 +44,7 @@ const Userboard = () => {
   }, [userId]);
 
   useEffect(() => {
+    // Fetch participating events data
     const fetchData = async () => {
       try {
         const eventPromises = participatingEvents.map((eventId) =>
@@ -56,6 +62,7 @@ const Userboard = () => {
   }, [participatingEvents]);
 
   useEffect(() => {
+    // Fetch events data from requests received by the user
     const eventIds = From.map((event) => event.eventId);
 
     const fetchEventData = async () => {
@@ -75,6 +82,7 @@ const Userboard = () => {
   }, [From]);
 
   useEffect(() => {
+    // Fetch events data for requests sent by the user
     const eventIds = Request.map((event) => event.eventId);
 
     const fetchEventData = async () => {
@@ -87,7 +95,6 @@ const Userboard = () => {
         const eventResponses = await Promise.all(eventPromises);
         const eventsData = eventResponses.map((res) => res.data);
         setEventsData4(eventsData);
-        // console.log(eventsData);
       } catch (error) {
         console.error("Error fetching event data:", error);
       }
@@ -97,26 +104,35 @@ const Userboard = () => {
   }, [Request]);
 
   useEffect(() => {
+    // Fetch events created by the user
     axios
       .get(`http://localhost:4000/fetch-event-createdby/${userId}`)
       .then((res) => {
         setEventsData3(res.data);
-        console.log()
       })
       .catch((err) => {
         console.error("Error fetching user data:", err);
       });
   }, [userId]);
 
-  const handleClick = (eventId) => () => {
-    navigate(`/dashboard/${eventId}`);
-  };
-
   useEffect(() => {
+    // Fetch requests received by the user
     axios.get(`http://localhost:4000/fetch-requests/${userId}`).then((res) => {
       setRequest(res.data);
     });
   }, [userId]);
+
+  const handleClick = (eventId) => () => {
+    navigate(`/dashboard/${eventId}`);
+  };
+
+  const handleRequests = () => {
+    setShowRequestsPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowRequestsPopup(false);
+  };
 
   return (
     <div className="m-10">
@@ -214,11 +230,11 @@ const Userboard = () => {
           {eventsData3.length > 0 ? (
             eventsData3.map((eventItem) => (
               <div
-                  className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
-                  onClick={handleClick(eventItem._id)}
-                  key={eventItem._id}
-                >
-                  <div>
+                className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
+                // onClick={handleClick(eventItem._id)}
+                key={eventItem._id}
+              >
+                <div>
                   <h3>{eventItem.title}</h3>
                   <div className="flex items-center gap-1 my-2">
                     <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
@@ -234,10 +250,18 @@ const Userboard = () => {
                     <i className="fi fi-rr-marker mt-1 mr-1"></i>
                     <p className="">{eventItem.location}</p>
                   </div>
-                  
-                  </div>
-                  <div><p>{eventItem.requestId ? eventItem.requestId.length : 0}</p></div>
                 </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    className="event bg-slate-800 text-slate-50 p-4 rounded"
+                    onClick={handleRequests}
+                  >
+                    {eventItem && eventItem.requestsId
+                      ? eventItem.requestsId.length
+                      : 0}
+                  </button>
+                </div>
+              </div>
             ))
           ) : (
             <h3>No Events</h3>
@@ -266,11 +290,10 @@ const Userboard = () => {
                   </p>
                 </div>
                 {Request.map((req) => {
-                  if (req.eventId === event.requestId) {
-                    return <p>{req.from}</p>;
-                  } else {
-                    return null;
+                  if (req._id === event.requestsId) {
+                    return <p key={req._id}>{req.from}</p>;
                   }
+                  return null;
                 })}
               </div>
             ))}
@@ -279,6 +302,10 @@ const Userboard = () => {
           <h3>No Events</h3>
         )}
       </div>
+
+      {showRequestsPopup && (
+        <RequestDetailsPopup requests={Request} closePopup={closePopup} />
+      )}
     </div>
   );
 };

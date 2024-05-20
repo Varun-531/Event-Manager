@@ -1,0 +1,89 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+const RequestDetailsPopup = ({ requests, closePopup }) => {
+  const [senderData, setSenderData] = useState({});
+
+  useEffect(() => {
+    const fetchSenderData = async () => {
+      try {
+        const senderIds = requests.map((request) => request.from);
+        const senderDataMap = {};
+        for (const senderId of senderIds) {
+          const response = await axios.get(
+            `http://localhost:4000/fetch-user/${senderId}`
+          );
+          senderDataMap[senderId] = response.data;
+        }
+        setSenderData(senderDataMap);
+      } catch (error) {
+        console.error("Error fetching sender data:", error);
+      }
+    };
+
+    fetchSenderData();
+  }, [requests]);
+
+  const handleAccept = async (requestId) => {
+    try {
+      await axios.post(`http://localhost:4000/accept-request`, { requestId });
+      // You can optionally update the UI to reflect the change in status
+    } catch (error) {
+      console.error("Error accepting request:", error);
+      // Handle error or display a notification to the user
+    }
+  };
+
+  const handleDecline = async (requestId) => {
+    try {
+      await axios.post(`http://localhost:4000/decline-request`, { requestId });
+      // You can optionally update the UI to reflect the change in status
+    } catch (error) {
+      console.error("Error declining request:", error);
+      // Handle error or display a notification to the user
+    }
+  };
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup-content w-1/3">
+        <button className="close-button" onClick={closePopup}>
+          &times;
+        </button>
+        <h2>Requests Details</h2>
+        <div className="flex flex-col gap-2 popup">
+          {requests.map((request) => (
+            <div key={request._id} className="flex justify-between">
+              <div>
+                <p>From: {senderData[request.from]?.username}</p>
+                <p>Email: {senderData[request.from]?.email}</p>
+              </div>
+              <div>
+                {request.status === "Pending" ? (
+                  <div className="flex gap-1">
+                    <button
+                      className="button-poppup bg-green-700 text-slate-100 text-sm p-1 rounded"
+                      onClick={() => handleAccept(request._id)}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="button-poppup bg-red-700 text-slate-100 text-sm p-1 rounded"
+                      onClick={() => handleDecline(request._id)}
+                    >
+                      Decline
+                    </button>
+                  </div>
+                ) : (
+                  <p>Status: {request.status}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RequestDetailsPopup;
