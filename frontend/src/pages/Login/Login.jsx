@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "./Login.css";
 import axios from "axios";
 import toast from "react-hot-toast";
-import LoginSvg from "./Login.svg";
+// import LoginSvg from "./Login.svg";
+import LoginSvg from "./14230944_5437681.svg";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
@@ -65,7 +66,7 @@ const Login = () => {
   return (
     <div className="login-background h-full flex justify-center">
       <div className="login-container flex gap-7 justify-center items-center bg-orange-100 rounded p-14">
-        <img src={LoginSvg} alt="svg" className="h-2/3" />
+        <img src={LoginSvg} alt="svg" className="h-[60vh]" />
         {login ? (
           <div className="temp flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">

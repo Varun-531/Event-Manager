@@ -266,6 +266,40 @@ app.post("/add-request", async (req, res) => {
     if(event.requestsId.includes(newRequest._id)){
       return res.status(400).json({ message: "Request already sent" });
     }
+    const user = await User.findById(from);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const creator = await User.findById(to);
+    if (!creator) {
+      return res.status(404).json({ message: "Creator not found" });
+    }
+    //send email to user 
+    try {
+      const mailOptions = {
+        from: process.env.REACT_APP_EMAIL,
+        to: user.email,
+        subject: "Event Request Confirmation",
+        text: `Hi ${user.username}, you have successfully requested to join the event ${event.title}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+    //send email to creator about the request
+    try {
+      const mailOptions = {
+        from: process.env.REACT_APP_EMAIL,
+        to: creator.email,
+        subject: "Event Request",
+        text: `Hi ${creator.username}, you have a new request for the event ${event.title}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
     event.requestsId.push(newRequest._id);
     await event.save(); 
     return res.json(newRequest);
@@ -300,13 +334,31 @@ app.get("/fetch-from-request/:id", async (req, res) => {
 app.post("/decline-request", async (req, res) => {
   const { requestId } = req.body;
   try{
+    //send email to user about the request being declined
     const request = await Request.findById(requestId);
+    const user = await User.findById(request.from);
+    if(!user){
+      return res.status(404).json({message:"User not found"});
+    }
     if(!request){
       return res.status(404).json({message:"Request not found"});
     }
     const event = await Event.findById(request.eventId);
     if(!event){
       return res.status(404).json({message:"Event not found"});
+    }
+    try{
+      const mailOptions = {
+        from: process.env.REACT_APP_EMAIL,
+        to: user.email,
+        subject: "Event Request Declined",
+        text: `Hi ${user.username}, your request to join the event ${event.title} has been declined , better luck next time!`,
+      };
+      await transporter.sendMail(mailOptions);
+    }
+    catch(error){
+      console.error("Error sending email:",error);
+      return res.status(500).json({message:"Internal Server Error"});
     }
     request.status = "Declined";
     await request.save();
@@ -337,6 +389,20 @@ app.post("/accept-request", async (req, res) => {
     }
     if(user.events.includes(event._id)){
       return res.status(400).json({message:"User already registered for this event"});
+    }
+    //send email
+    try{
+      const mailOptions = {
+        from: process.env.REACT_APP_EMAIL,
+        to: user.email,
+        subject: "Event Request Accepted",
+        text: `Hi ${user.username}, your request to join the event ${event.title} has been accepted, see you there!`,
+      };
+      await transporter.sendMail(mailOptions);
+    }
+    catch(error){
+      console.error("Error sending email:",error);
+      return res.status(500).json({message:"Internal Server Error"});
     }
     user.events.push(event._id);
     await user.save();

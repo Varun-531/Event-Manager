@@ -21,31 +21,9 @@ const Home = () => {
   useEffect(() => {}, [cookies.userId]);
 
   return (
-    <div className="container-1 p-[2%] px-[10vw] flex flex-col">
-      <div>
-        {/* <nav className="list-none flex gap-3 float-right">
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          {cookies.userId ? (
-            <>
-              <li>
-                <Link to="/dashboard">Dashboard</Link>
-              </li>
-              <li>
-                <Link to="/create-event">Add Event</Link>
-              </li>
-              <li>
-                <button onClick={handleLogout}>Logout</button>
-              </li>
-            </>
-          ) : (
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-          )}
-        </nav> */}
-        {/* <h1>Event Manager</h1> */}
+    <div className="container-1 p-[2%] px-[10vw]">
+    <button className="float-right bg-slate-900 p-1 rounded text-base px-2 login-button"><Link to={'/login'}>Login</Link></button>
+      <div className="flex flex-col">
       </div>
       <div className="flex flex-col justify-center items-center mt-[25vh]">
         <h1 className="text-4xl font-bold mt-10">Welcome to Event Manager</h1>

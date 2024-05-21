@@ -3,18 +3,16 @@
     margin: 0;
 }
 .container-1{
-    /* background-color: rgb(16, 7, 76);
-     */
      background-image: url('./blob-scatter-haikei.svg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
     height: 100vh;
-    color: white;
+    color: rgb(240, 236, 236);
 }
 .home-button{
-    border: 2px solid white;
+    border: 2px solid rgb(240, 236, 236);
     padding: 5px;
     border-radius: 5px;
     width: 120px;
@@ -23,5 +21,13 @@
     color:#ff0066;
     font-weight: 500;
     transition: 0.5s ease-in-out;
-    background-color: white;
+    background-color: rgb(240, 236, 236);
 }
+.login-button{
+    font-weight: 450;
+}
+.login-button:hover{
+    background-color: #182542;
+    transition: 1s ease-in-out;
+}
+  
