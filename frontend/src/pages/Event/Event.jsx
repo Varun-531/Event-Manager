@@ -8,8 +8,13 @@ import popcorn from "./popcorn-svgrepo-com.svg";
 import satelite from "./satellite-svgrepo-com.svg";
 import football from "./cricket-game-svgrepo-com.svg";
 import music from "./music-svgrepo-com.svg";
+import Kids from "./xylophone-svgrepo-com.svg";
+import Arts from "./paint-palette-artist-svgrepo-com.svg";
 import dice from "./game-die-svgrepo-com.svg";
+import Lifestyle from "./7775310_3761039.svg";
 import bookSvg from "./books-svgrepo-com.svg";
+import Food from "./hamburger-svgrepo-com.svg";
+import culture from "./culture-japan-japanese-2-svgrepo-com.svg";
 import other from "./celebrate-svgrepo-com.svg";
 
 const Event = () => {
@@ -23,6 +28,7 @@ const Event = () => {
   const { id } = useParams();
   const [cookies] = useCookies(["userId"]);
   const userId = cookies.userId;
+  const [att, setAtt] = useState(0);
 
   useEffect(() => {
     axios
@@ -51,14 +57,14 @@ const Event = () => {
     setBookOption(event.availability === "Public" ? "Book" : "Request");
     const occupancyValue = event.size - (event.attendees?.length || 0);
     setOccupancy(occupancyValue);
+    setAtt(event.attendees?.length || 0);
   }, [event.availability, event.attendees, event.size]);
 
   useEffect(() => {
-    if(!userId){
+    if (!userId) {
       setBooked(true);
       setBookText("Login to book");
-    }
-    else if (event.attendees?.includes(userId)) {
+    } else if (event.attendees?.includes(userId)) {
       setBooked(true);
       setBookText("Booked");
     } else if (event.creator === userId) {
@@ -78,12 +84,20 @@ const Event = () => {
         return football;
       case "Music":
         return music;
-      case "Games":
-        return dice;
+      case "LifeStyle":
+        return Lifestyle;
       case "Education":
         return bookSvg;
       case "Technology":
         return satelite;
+      case "Culture":
+        return culture;
+      case "Food":
+        return Food;
+      case "Kids":
+        return Kids;
+      case "Arts":
+        return Arts;
       default:
         return other;
     }
@@ -95,11 +109,10 @@ const Event = () => {
   };
 
   const handleClick = () => {
-    if(!userId){
+    if (!userId) {
       toast.error("Please login to book the event");
       return;
-    }
-    else{
+    } else {
       if (event.availability === "Public") {
         axios
           .post(`http://localhost:4000/book-event`, {
@@ -111,6 +124,7 @@ const Event = () => {
             toast.success("Booking successful");
             setOccupancy(occupancy - 1);
             setBooked(true);
+            setAtt(att + 1);
             setBookText("Booked");
           })
           .catch((err) => {
@@ -151,23 +165,25 @@ const Event = () => {
             <img src={event.image} className="image" alt="Event" />
           </div>
           <div className="">
-            <div className="details flex items-center justify-around">
+            <div className="details flex items-center justify-between">
               <div className="flex flex-col gap-2">
-                <h2 className="font-semibold absolute">{event.title}</h2>
-                <div className="flex gap-2 items-center pt-10">
+                <h2 className="font-semibold absolute truncate">
+                  {event.title}
+                </h2>
+                <div className="flex gap-4 items-center pt-10">
                   <i className="fi fi-rr-bookmark text-lg" id="bookmark"></i>
                   <p>{event.category}</p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-4 items-center">
                   <i className="fi fi-rr-earth-americas"></i>
                   <p>{event.availability}</p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-4 items-center">
                   <i className="fi fi-rr-calendar-day"></i>
                   <p>{formatDate(event.date)}</p>
                   <p>{event.time}</p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-4 items-center">
                   <i className="fi fi-rr-marker"></i>
                   <p>{event.location}</p>
                 </div>
@@ -182,15 +198,20 @@ const Event = () => {
             </div>
             <div className="mt-3 details flex justify-between items-center">
               <div className="flex flex-col">
-                <div className="flex gap-2 items-center ml-3">
+                <div className="flex gap-4 items-center">
                   <i className="fi fi-rr-user"></i>
                   <p>{creator.username}</p>
                 </div>
-                <div className="flex gap-2 items-center ml-3">
+                <div className="flex gap-4 items-center">
+                  <i className="fi fi-rr-users-alt"></i>
+                  <p>Antendees</p>
+                  <p>{att}</p>
+                </div>
+                <div className="flex gap-4 items-center">
                   <i className="fi fi-rr-chair"></i>
                   <p>{occupancy} left</p>
                 </div>
-                <div className="flex gap-2 items-center ml-3">
+                <div className="flex gap-4 items-center">
                   <i className="fi fi-rr-ticket"></i>
                   <p>{event.price === 0 ? "Free" : event.price}</p>
                 </div>

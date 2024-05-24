@@ -20,9 +20,9 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 6,
     },
-    events:{
-      type:[String],
-      required:true
+    events: {
+      type: [String],
+      required: true,
     },
   },
   {

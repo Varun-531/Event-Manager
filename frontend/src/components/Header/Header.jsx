@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,11 +17,16 @@ const Header = () => {
     navigate("/userboard");
   }, [navigate]);
 
+  const handleCreateEvent = () => {
+    navigate("/create-event");
+  };
+
   const handleLogout = useCallback(() => {
-    removeCookie("userId", { path: '/' });
-    removeCookie("token", { path: '/' });
+    removeCookie("userId", { path: "/" });
+    removeCookie("token", { path: "/" });
     setLogin(false);
     navigate("/");
+    toast.success("Logged out successfully");
   }, [removeCookie, navigate]);
 
   return (
@@ -30,12 +36,18 @@ const Header = () => {
       </div>
       <nav className="text-slate-200">
         <ul className="flex justify-center gap-7">
-          <li>
+          {/* <li>
             <Link className="headerLink" to="/dashboard">Dashboard</Link>
-          </li>
+          </li> */}
           {login ? (
             <>
-              <li onClick={handleUserBoard} className="headerLink cursor-pointer">
+              <li>
+                <button onClick={handleCreateEvent}>Create Event</button>
+              </li>
+              <li
+                onClick={handleUserBoard}
+                className="headerLink cursor-pointer"
+              >
                 UserBoard
               </li>
               <li>
@@ -45,7 +57,9 @@ const Header = () => {
           ) : (
             <>
               <li>
-                <Link className="headerLink" to="/login">Login</Link>
+                <Link className="headerLink" to="/login">
+                  Login
+                </Link>
               </li>
             </>
           )}

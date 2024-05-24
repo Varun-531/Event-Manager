@@ -20,7 +20,7 @@ const CreateEvent = () => {
   const [availability, setAvailability] = useState("");
   const [location, setLocation] = useState("");
   const [size, setSize] = useState(0);
-  const [pincode,setPincode] = useState(0);
+  const [pincode, setPincode] = useState(0);
   const [category, setCategory] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState("");
   const [publicEvent, setPublicEvent] = useState(false);
@@ -51,7 +51,7 @@ const CreateEvent = () => {
     formData.append("availability", availability);
     formData.append("location", location);
     formData.append("size", size);
-    formData.append("pincode",pincode);
+    formData.append("pincode", pincode);
     formData.append("creator", userId);
     formData.append("category", category);
     formData.append("price", price);
@@ -224,37 +224,43 @@ const CreateEvent = () => {
                     <option value="Sports">Sports</option>
                     <option value="Education">Education</option>
                     <option value="Technology">Technology</option>
-                    <option value="Games">Games</option>
+                    <option value="kids">Kids</option>
+                    <option value="LifeStyle">LifeStyle</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Culture">Culture</option>
+                    <option value="Food">Food</option>
                     <option value="Entertainment">Entertainment</option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
               </div>
               <div className="temp-1 flex">
-              <div><label className="block text-sm font-medium leading-6 text-gray-900">
-                Price
-              </label>
-              <input
-                type="number"
-                id="price"
-                min={0}
-                className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              /></div>
-              <div>
-              <label className="block text-sm font-medium leading-6 text-gray-900">
-                Pincode
-              </label>
-              <input
-                type="number"
-                id="pincode"
-                min={0}
-                className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-              />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium leading-6 text-gray-900">
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    id="price"
+                    min={0}
+                    className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium leading-6 text-gray-900">
+                    Pincode
+                  </label>
+                  <input
+                    type="number"
+                    id="pincode"
+                    min={0}
+                    className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                  />
+                </div>
               </div>
               <label className="block text-sm font-medium leading-6 text-gray-900">
                 Terms and Conditions

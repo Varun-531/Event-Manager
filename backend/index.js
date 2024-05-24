@@ -144,6 +144,17 @@ app.get("/fetch-events", async (req, res) => {
   }
 });
 
+app.get("/fetch-events-by-category/:category", async (req, res) => {
+  const { category } = req.params;
+  try {
+    const events = await Event.find({ category });
+    return res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.get("/fetch-event/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -368,6 +379,8 @@ app.post("/decline-request", async (req, res) => {
     return res.status(500).json({message:"Internal Server Error"});
   }
 });
+
+
 
 app.post("/accept-request", async (req, res) => {
   const { requestId } = req.body;
