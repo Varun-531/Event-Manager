@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+// import background from "./blob-scatter-haikei (2).svg";
 import PropagateLoader from "react-spinners/PropagateLoader";
 
 function SampleNextArrow(props) {
@@ -144,7 +145,7 @@ const Dashboard = () => {
           />
         </div>
       )}
-      <div className="flex">
+      <div className="flex dashboard">
         <div className="w-[100vw] mx-[10vh]">
           {/* <h3 className="w-1/2 my-5">Explore the events happening around you</h3> */}
           <div className="w-[80vw] mx-[5vw] mt-5">

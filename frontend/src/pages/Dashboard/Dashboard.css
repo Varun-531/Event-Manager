@@ -1,74 +1,71 @@
 .event-slider {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
-.event-slider1{
-    height: 60vh;
+.event-slider1 {
+  height: 60vh;
 }
-  
+
 .event-slide {
-    padding: 0 10px;
+  padding: 0 10px;
 }
-  
+
 .event-article {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-    position: relative; /* Ensure relative positioning for absolute positioning */
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  position: relative; /* Ensure relative positioning for absolute positioning */
 }
 
 .event-image {
-    width: 30vw;
-    height: 30vh;
-    transition: filter 0.5s ease; /* Apply transition effect to filter property */
+  width: 30vw;
+  height: 30vh;
+  transition: filter 0.5s ease; /* Apply transition effect to filter property */
 }
 
-.event-image1{
-    width: 70vw;
-    height: 80vh;
-    /* filter:brightness(40%); */
+.event-image1 {
+  width: 70vw;
+  height: 80vh;
+  /* filter:brightness(40%); */
 }
 
 .event-image:hover {
-    filter: brightness(40%); /* Darken the image on hover */
+  filter: brightness(40%); /* Darken the image on hover */
 }
 
 .location-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    opacity: 0; /* Initially hide location */
-    visibility: hidden; /* Initially hide location */
-    transition: opacity 0.5s ease; /* Apply transition effect to opacity */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  opacity: 0; /* Initially hide location */
+  visibility: hidden; /* Initially hide location */
+  transition: opacity 0.5s ease; /* Apply transition effect to opacity */
 }
-  
+
 .custom-slider .slick-dots {
-    position: absolute;
-    bottom: -120px;
-    width: 100%;
-    display: flex !important;
-    justify-content: center;
-  }
-  
+  position: absolute;
+  bottom: -120px;
+  width: 100%;
+  display: flex !important;
+  justify-content: center;
+}
 
 .event-article:hover .location-container {
-    opacity:1; 
-    visibility: visible; 
+  opacity: 1;
+  visibility: visible;
 }
 
 .slick-dots li button {
-    background-color: skyblue; /* Change the background color of the dots */
-    border-color: skyblue; /* Change the border color of the dots */
-  }
-  
-  
-    
-.previousArrow{
-    /* height: 100px; */
-    /* width: 100px;
+  background-color: skyblue; /* Change the background color of the dots */
+  border-color: skyblue; /* Change the border color of the dots */
+}
+
+.previousArrow {
+  /* height: 100px; */
+  /* width: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -77,20 +74,27 @@
     z-index: 2;
     display: block; */
 }
-article{
-    cursor: pointer;
+article {
+  cursor: pointer;
 }
-.slick-prev:before{
-    content: none !important;
+.slick-prev:before {
+  content: none !important;
 }
-.slick-next:before{
-    content: none !important;
+.slick-next:before {
+  content: none !important;
 }
-.firstarrow{
-    font-size: 24px;
-    color: black;
+.firstarrow {
+  font-size: 24px;
+  color: black;
 }
 .custom-prev-arrow:hover {
-    background-color: white;
-  }
-  
+  background-color: white;
+}
+/* .dashboard {
+  background-image: url("./blob-scatter-haikei.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  height: 100vh;
+} */

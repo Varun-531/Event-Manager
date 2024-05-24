@@ -66,6 +66,9 @@ const Event = () => {
     if (!userId) {
       setBooked(true);
       setBookText("Login to book");
+    } else if (new Date(event.date) < new Date()) {
+      setBooked(true);
+      setBookText("Event Completed");
     } else if (event.attendees?.includes(userId)) {
       setBooked(true);
       setBookText("Booked");
