@@ -188,7 +188,7 @@ const Event = () => {
             <div className="">
               <div className="details flex items-center justify-between">
                 <div className="flex flex-col gap-2">
-                  <h2 className="font-semibold absolute truncate">
+                  <h2 className="font-semibold absolute truncate w-[30vw]">
                     {event.title}
                   </h2>
                   <div className="flex gap-4 items-center pt-10">

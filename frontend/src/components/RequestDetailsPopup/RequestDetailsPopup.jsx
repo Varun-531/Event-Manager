@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropagateLoader from "react-spinners/PropagateLoader";
+import { toast } from "react-hot-toast";
 
 const RequestDetailsPopup = ({ requests, closePopup }) => {
   const [senderData, setSenderData] = useState({});
@@ -45,22 +46,33 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
   }, [requests]);
 
   const handleAccept = async (requestId) => {
+    setLoading(true);
     try {
       await axios.post(`http://localhost:4000/accept-request`, { requestId });
+      toast.success("Request accepted successfully");
       // You can optionally update the UI to reflect the change in status
+
+      setLoading(false);
     } catch (error) {
       console.error("Error accepting request:", error);
+      setLoading(false);
+      toast.error("Error accepting request");
       // Handle error or display a notification to the user
     }
   };
 
   const handleDecline = async (requestId) => {
+    setLoading(true);
     try {
       await axios.post(`http://localhost:4000/decline-request`, { requestId });
       // You can optionally update the UI to reflect the change in status
+      setLoading(false);
+      toast.success("Request declined successfully");
     } catch (error) {
       console.error("Error declining request:", error);
       // Handle error or display a notification to the user
+      setLoading(false);
+      toast.error("Error declining request");
     }
   };
 

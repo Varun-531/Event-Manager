@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
+  const [first, setFirst] = useState(false);
+  const [second, setSecond] = useState(true);
+  const [otp, setOtp] = useState("");
+  const [third, setThird] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -40,6 +44,24 @@ const Login = () => {
       .catch((err) => {
         console.error(err);
         toast.error("Invalid email or password");
+      });
+  };
+
+  const verifyEmail = (event) => {
+    event.preventDefault(); // Prevent default form submission
+    console.log(email);
+    axios
+      .post("http://localhost:4000/email-verification", { email })
+      .then((res) => {
+        console.log(res.data);
+        toast.success("OTP sent successfully");
+        setFirst(true);
+        setThird(true);
+        setSecond(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        // toast.error("Error sending OTP");
       });
   };
 
@@ -76,7 +98,7 @@ const Login = () => {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-6" onSubmit={handleLogin} method="POST">
+              <form className="space-y-6">
                 <div>
                   <label
                     htmlFor="email"
@@ -131,7 +153,8 @@ const Login = () => {
 
                 <div>
                   <button
-                    type="submit"
+                    // type="submit"
+                    onClick={handleLogin}
                     className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Sign in
@@ -163,7 +186,7 @@ const Login = () => {
             </div>
 
             <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-2" onSubmit={handleSignup} method="POST">
+              <form className="space-y-2">
                 <div>
                   <label
                     htmlFor="email"
@@ -204,60 +227,99 @@ const Login = () => {
                     />
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between">
+                {third && (
+                  <div>
                     <label
-                      htmlFor="password"
-                      className="block text-sm font-medium leading-1 text-gray-900"
+                      htmlFor="OTP"
+                      className="block text-sm font-medium leading-2 text-gray-900"
                     >
-                      Password
+                      OTP
                     </label>
+                    <div className="mt-1">
+                      <input
+                        id="OTP"
+                        name="OTP"
+                        type="text"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        autoComplete="OTP"
+                        required
+                        className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
                   </div>
-                  <div className="mt-1">
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      autoComplete="current-password"
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                )}
+                {second && (
+                  <>
+                    <div>
+                      <button
+                        className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                        onClick={verifyEmail}
+                      >
+                        Send OTP
+                      </button>
+                    </div>
+                  </>
+                )}
+                {first && (
+                  <>
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <label
+                          htmlFor="password"
+                          className="block text-sm font-medium leading-1 text-gray-900"
+                        >
+                          Password
+                        </label>
+                      </div>
+                      <div className="mt-1">
+                        <input
+                          id="password"
+                          name="password"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          autoComplete="current-password"
+                          required
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-                <div className="div2">
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="confirm-password"
-                      className="block text-sm font-medium leading-4 text-gray-900"
-                    >
-                      Confirm Password
-                    </label>
-                  </div>
-                  <div className="mt-1">
-                    <input
-                      id="confirm-password"
-                      name="confirm-password"
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      type="password"
-                      value={confirmPassword}
-                      autoComplete="confirm-password"
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                    <div className="div2">
+                      <div className="flex items-center justify-between">
+                        <label
+                          htmlFor="confirm-password"
+                          className="block text-sm font-medium leading-4 text-gray-900"
+                        >
+                          Confirm Password
+                        </label>
+                      </div>
+                      <div className="mt-1">
+                        <input
+                          id="confirm-password"
+                          name="confirm-password"
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          type="password"
+                          value={confirmPassword}
+                          autoComplete="confirm-password"
+                          required
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-                <div>
-                  <button
-                    type="submit"
-                    className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                  >
-                    Sign up
-                  </button>
-                </div>
+                    <div>
+                      <button
+                        // type="submit"
+                        onClick={handleSignup}
+                        className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                      >
+                        Sign up
+                      </button>
+                    </div>
+                  </>
+                )}
               </form>
 
               <p className="mt-6 text-center text-sm text-gray-500">

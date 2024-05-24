@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const User = require("./models/User");
+const Otp = require("./models/Otp");
 const Event = require("./models/Event");
 const Request = require("./models/Request");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const multer = require("multer");
 const dotenv = require("dotenv");
+const otpGenerator = require("otp-generator");
 const upload = multer({ dest: "uploads/" });
 
 const cloudinary = require("cloudinary").v2;
@@ -134,6 +136,67 @@ app.post("/add-event", upload.single("image"), async (req, res) => {
   }
 });
 
+app.post("/email-verification", async (req, res) => {
+  const { email } = req.body;
+  const otp = otpGenerator.generate(4, {
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
+    specialChars: false,
+  });
+  try {
+    const mailOptions = {
+      from: process.env.REACT_APP_EMAIL,
+      to: email,
+      subject: "Email Verification",
+      text: `Your OTP is ${otp}`,
+    };
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+      } else {
+        try {
+          await Otp.deleteOne({ email });
+          const newOtp = new Otp({
+            email,
+            otp: hashedOtp,
+          });
+          await newOtp.save();
+          console.log("OTP sent successfully");
+          return res.json({ success: true });
+        } catch (error) {
+          console.error("Error saving otp:", error);
+          return res.status(500).json({ message: "Internal Server Error" });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/otp-verification", async (req, res) => {
+  const { email, otp } = req.body;
+  try {
+    const userOtp = await Otp.findOne({ email });
+    if (userOtp) {
+      const match = await bcrypt.compare(otp, userOtp.otp);
+      if (match) {
+        return res.json({ success: true });
+      } else {
+        return res.status(400).json({ message: "Invalid OTP" });
+      }
+    } else {
+      return res.status(404).json({ message: "OTP not found" });
+    }
+  } catch (error) {
+    console.error("Error during otp verification:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.get("/fetch-events", async (req, res) => {
   try {
     const events = await Event.find();
@@ -195,10 +258,12 @@ app.post("/book-event", async (req, res) => {
       return res.status(400).json({ message: "Event is full" });
     }
     if (event.attendees.includes(userId)) {
-      return res.status(400).json({ message: "You are already registered for this event" });
+      return res
+        .status(400)
+        .json({ message: "You are already registered for this event" });
     }
     if (!user.events) {
-      user.events = []; 
+      user.events = [];
     }
     if (!user.events.includes(eventId)) {
       user.events.push(eventId);
@@ -274,7 +339,7 @@ app.post("/add-request", async (req, res) => {
       return res.status(400).json({ message: "Request already sent" });
     }
     event.requests.push(from);
-    if(event.requestsId.includes(newRequest._id)){
+    if (event.requestsId.includes(newRequest._id)) {
       return res.status(400).json({ message: "Request already sent" });
     }
     const user = await User.findById(from);
@@ -285,7 +350,7 @@ app.post("/add-request", async (req, res) => {
     if (!creator) {
       return res.status(404).json({ message: "Creator not found" });
     }
-    //send email to user 
+    //send email to user
     try {
       const mailOptions = {
         from: process.env.REACT_APP_EMAIL,
@@ -312,7 +377,7 @@ app.post("/add-request", async (req, res) => {
       return res.status(500).json({ message: "Internal Server Error" });
     }
     event.requestsId.push(newRequest._id);
-    await event.save(); 
+    await event.save();
     return res.json(newRequest);
   } catch (error) {
     console.error("Error adding request:", error);
@@ -344,21 +409,21 @@ app.get("/fetch-from-request/:id", async (req, res) => {
 
 app.post("/decline-request", async (req, res) => {
   const { requestId } = req.body;
-  try{
+  try {
     //send email to user about the request being declined
     const request = await Request.findById(requestId);
     const user = await User.findById(request.from);
-    if(!user){
-      return res.status(404).json({message:"User not found"});
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    if(!request){
-      return res.status(404).json({message:"Request not found"});
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
     }
     const event = await Event.findById(request.eventId);
-    if(!event){
-      return res.status(404).json({message:"Event not found"});
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
     }
-    try{
+    try {
       const mailOptions = {
         from: process.env.REACT_APP_EMAIL,
         to: user.email,
@@ -366,45 +431,46 @@ app.post("/decline-request", async (req, res) => {
         text: `Hi ${user.username}, your request to join the event ${event.title} has been declined , better luck next time!`,
       };
       await transporter.sendMail(mailOptions);
-    }
-    catch(error){
-      console.error("Error sending email:",error);
-      return res.status(500).json({message:"Internal Server Error"});
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
     request.status = "Declined";
     await request.save();
-  }
-  catch(error){
-    console.error("Error declining request:",error);
-    return res.status(500).json({message:"Internal Server Error"});
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error declining request:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-
-
 app.post("/accept-request", async (req, res) => {
   const { requestId } = req.body;
-  try{
+  try {
     const request = await Request.findById(requestId);
     const user = await User.findById(request.from);
-    if(!request){
-      return res.status(404).json({message:"Request not found"});
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
     }
     const event = await Event.findById(request.eventId);
-    if(!event){
-      return res.status(404).json({message:"Event not found"});
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
     }
-    if(event.attendees.length === event.size){
-      return res.status(400).json({message:"Event is full"});
+    if (event.attendees.length === event.size) {
+      return res.status(400).json({ message: "Event is full" });
     }
-    if(event.attendees.includes(request.from)){
-      return res.status(400).json({message:"User already registered for this event"});
+    if (event.attendees.includes(request.from)) {
+      return res
+        .status(400)
+        .json({ message: "User already registered for this event" });
     }
-    if(user.events.includes(event._id)){
-      return res.status(400).json({message:"User already registered for this event"});
+    if (user.events.includes(event._id)) {
+      return res
+        .status(400)
+        .json({ message: "User already registered for this event" });
     }
     //send email
-    try{
+    try {
       const mailOptions = {
         from: process.env.REACT_APP_EMAIL,
         to: user.email,
@@ -412,10 +478,9 @@ app.post("/accept-request", async (req, res) => {
         text: `Hi ${user.username}, your request to join the event ${event.title} has been accepted, see you there!`,
       };
       await transporter.sendMail(mailOptions);
-    }
-    catch(error){
-      console.error("Error sending email:",error);
-      return res.status(500).json({message:"Internal Server Error"});
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
     user.events.push(event._id);
     await user.save();
@@ -423,10 +488,10 @@ app.post("/accept-request", async (req, res) => {
     await event.save();
     request.status = "Accepted";
     await request.save();
-  }
-  catch(error){
-    console.error("Error accepting request:",error);
-    return res.status(500).json({message:"Internal Server Error"});
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error accepting request:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

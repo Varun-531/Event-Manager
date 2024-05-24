@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx";
 import PropagateLoader from "react-spinners/PropagateLoader";
+import toast from "react-hot-toast";
 
 const Userboard = () => {
   const [cookies] = useCookies(["userId"]);
@@ -150,7 +151,12 @@ const Userboard = () => {
   };
 
   const handleRequests = () => {
-    setShowRequestsPopup(true);
+    if (count === 0) {
+      toast.error("No requests to show");
+      return;
+    } else {
+      setShowRequestsPopup(true);
+    }
   };
 
   const closePopup = () => {
@@ -277,6 +283,7 @@ const Userboard = () => {
                   className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
                   // onClick={handleClick(eventItem._id)}
                   key={eventItem._id}
+                  onClick={handleClick(eventItem._id)}
                 >
                   <div>
                     <h3>{eventItem.title}</h3>
