@@ -4,7 +4,7 @@ import "./Userboard.css";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx"; 
+import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx";
 
 const Userboard = () => {
   const [cookies] = useCookies(["userId"]);
@@ -204,7 +204,7 @@ const Userboard = () => {
                             <span className="text-green-500">
                               {from.status}
                             </span>
-                          ) : from.status === "Rejected" ? (
+                          ) : from.status === "Declined" ? (
                             <span className="text-red-500">{from.status}</span>
                           ) : from.status === "Pending" ? (
                             <span className="text-yellow-500">
@@ -268,7 +268,7 @@ const Userboard = () => {
           )}
         </div>
       </div>
-      <div>
+      {/* <div>
         <h2>Requests</h2>
         {eventsData4.length > 0 ? (
           <div className="flex flex-wrap gap-1">
@@ -301,7 +301,7 @@ const Userboard = () => {
         ) : (
           <h3>No Events</h3>
         )}
-      </div>
+      </div> */}
 
       {showRequestsPopup && (
         <RequestDetailsPopup requests={Request} closePopup={closePopup} />

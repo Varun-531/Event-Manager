@@ -16,6 +16,7 @@ import bookSvg from "./books-svgrepo-com.svg";
 import Food from "./hamburger-svgrepo-com.svg";
 import culture from "./culture-japan-japanese-2-svgrepo-com.svg";
 import other from "./celebrate-svgrepo-com.svg";
+import PropagateLoader from "react-spinners/PropagateLoader";
 
 const Event = () => {
   const [event, setEvent] = useState({ attendees: [] });
@@ -23,6 +24,7 @@ const Event = () => {
   const [bookOption, setBookOption] = useState("");
   const [occupancy, setOccupancy] = useState(0);
   const [Booked, setBooked] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [bookText, setBookText] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { id } = useParams();
@@ -113,6 +115,7 @@ const Event = () => {
       toast.error("Please login to book the event");
       return;
     } else {
+      setLoading(true);
       if (event.availability === "Public") {
         axios
           .post(`http://localhost:4000/book-event`, {
@@ -126,10 +129,12 @@ const Event = () => {
             setBooked(true);
             setAtt(att + 1);
             setBookText("Booked");
+            setLoading(false);
           })
           .catch((err) => {
             console.error("Error booking event:", err);
             toast.error("Error booking event");
+            setLoading(false);
           });
       } else {
         axios
@@ -144,10 +149,12 @@ const Event = () => {
             toast.success("Request sent");
             setBooked(true);
             setBookText("Requested");
+            setLoading(false);
           })
           .catch((err) => {
             console.error("Error sending request:", err);
             toast.error("Error sending request");
+            setLoading(false);
           });
       }
     }
@@ -158,134 +165,148 @@ const Event = () => {
   };
 
   return (
-    <div className="">
-      <div className="m-10 mx-20">
-        <div className="flex gap-3">
-          <div className="image-container">
-            <img src={event.image} className="image" alt="Event" />
-          </div>
-          <div className="">
-            <div className="details flex items-center justify-between">
-              <div className="flex flex-col gap-2">
-                <h2 className="font-semibold absolute truncate">
-                  {event.title}
-                </h2>
-                <div className="flex gap-4 items-center pt-10">
-                  <i className="fi fi-rr-bookmark text-lg" id="bookmark"></i>
-                  <p>{event.category}</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-earth-americas"></i>
-                  <p>{event.availability}</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-calendar-day"></i>
-                  <p>{formatDate(event.date)}</p>
-                  <p>{event.time}</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-marker"></i>
-                  <p>{event.location}</p>
-                </div>
-              </div>
-              <div className="">
-                <img
-                  src={selectSVG(event.category)}
-                  className="svg"
-                  alt="Category SVG"
-                />
-              </div>
-            </div>
-            <div className="mt-3 details flex justify-between items-center">
-              <div className="flex flex-col">
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-user"></i>
-                  <p>{creator.username}</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-users-alt"></i>
-                  <p>Antendees</p>
-                  <p>{att}</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-chair"></i>
-                  <p>{occupancy} left</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                  <i className="fi fi-rr-ticket"></i>
-                  <p>{event.price === 0 ? "Free" : event.price}</p>
-                </div>
-              </div>
-              {Booked ? (
-                <div
-                  className="m-3 booked text-pink-600 font-semibold p-3 cursor-not-allowed rounded shadow-slate-700 "
-                  // onClick={handleBookClick}
-                >
-                  {bookText}
-                </div>
-              ) : (
-                <div
-                  className="m-3 bg-pink-600 text-slate-100 font-semibold p-3 cursor-pointer rounded shadow-slate-700 hover:bg-pink-700"
-                  onClick={handleBookClick}
-                >
-                  {bookOption} a Ticket
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="mt-3">
-          <h3 className="font-semibold underline underline-offset-4">About</h3>
-          <p>{event.description}</p>
-          <p className="mt-3">
-            {event.time} - {event.endTime}
-          </p>
-          <p>{event.location}</p>
-          <p className="mb-3">{event.pincode}</p>
-        </div>
-        <div>
-          <h3 className="font-semibold underline underline-offset-4">
-            Terms and Conditions
-          </h3>
-          <ul>
-            {event.termsAndConditions &&
-              event.termsAndConditions
-                .split("\n")
-                .filter(Boolean)
-                .map((item, index) => (
-                  <li key={index} className="list-disc points">
-                    {item}
-                  </li>
-                ))}
-          </ul>
-        </div>
-      </div>
-      {showConfirmation && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold mb-4">Confirm Booking</h2>
-            <p>Are you sure you want to book a ticket for this event?</p>
-            <div className="flex justify-center mt-6">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-4"
-                onClick={() => {
-                  setShowConfirmation(false);
-                  handleClick();
-                }}
-              >
-                Yes
-              </button>
-              <button
-                className="bg-gray-400 text-black px-4 py-2 rounded-md"
-                onClick={() => setShowConfirmation(false)}
-              >
-                No
-              </button>
-            </div>
-          </div>
+    <>
+      {loading && (
+        <div className="loader-overlay">
+          <PropagateLoader
+            loading={loading}
+            speedMultiplier={1}
+            size={20}
+            aria-label="Loading Spinner"
+          />
         </div>
       )}
-    </div>
+      <div className="">
+        <div className="m-10 mx-20">
+          <div className="flex gap-3">
+            <div className="image-container">
+              <img src={event.image} className="image" alt="Event" />
+            </div>
+            <div className="">
+              <div className="details flex items-center justify-between">
+                <div className="flex flex-col gap-2">
+                  <h2 className="font-semibold absolute truncate">
+                    {event.title}
+                  </h2>
+                  <div className="flex gap-4 items-center pt-10">
+                    <i className="fi fi-rr-bookmark text-lg" id="bookmark"></i>
+                    <p>{event.category}</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-earth-americas"></i>
+                    <p>{event.availability}</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-calendar-day"></i>
+                    <p>{formatDate(event.date)}</p>
+                    <p>{event.time}</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-marker"></i>
+                    <p>{event.location}</p>
+                  </div>
+                </div>
+                <div className="">
+                  <img
+                    src={selectSVG(event.category)}
+                    className="svg"
+                    alt="Category SVG"
+                  />
+                </div>
+              </div>
+              <div className="mt-3 details flex justify-between items-center">
+                <div className="flex flex-col">
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-user"></i>
+                    <p>{creator.username}</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-users-alt"></i>
+                    <p>Antendees</p>
+                    <p>{att}</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-chair"></i>
+                    <p>{occupancy} left</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-ticket"></i>
+                    <p>{event.price === 0 ? "Free" : event.price}</p>
+                  </div>
+                </div>
+                {Booked ? (
+                  <div
+                    className="m-3 booked text-pink-600 font-semibold p-3 cursor-not-allowed rounded shadow-slate-700 "
+                    // onClick={handleBookClick}
+                  >
+                    {bookText}
+                  </div>
+                ) : (
+                  <div
+                    className="m-3 bg-pink-600 text-slate-100 font-semibold p-3 cursor-pointer rounded shadow-slate-700 hover:bg-pink-700"
+                    onClick={handleBookClick}
+                  >
+                    {bookOption} a Ticket
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="mt-3">
+            <h3 className="font-semibold underline underline-offset-4">
+              About
+            </h3>
+            <p>{event.description}</p>
+            <p className="mt-3">
+              {event.time} - {event.endTime}
+            </p>
+            <p>{event.location}</p>
+            <p className="mb-3">{event.pincode}</p>
+          </div>
+          <div>
+            <h3 className="font-semibold underline underline-offset-4">
+              Terms and Conditions
+            </h3>
+            <ul>
+              {event.termsAndConditions &&
+                event.termsAndConditions
+                  .split("\n")
+                  .filter(Boolean)
+                  .map((item, index) => (
+                    <li key={index} className="list-disc points">
+                      {item}
+                    </li>
+                  ))}
+            </ul>
+          </div>
+        </div>
+        {showConfirmation && (
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-semibold mb-4">Confirm Booking</h2>
+              <p>Are you sure you want to book a ticket for this event?</p>
+              <div className="flex justify-center mt-6">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md mr-4"
+                  onClick={() => {
+                    setShowConfirmation(false);
+                    handleClick();
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="bg-gray-400 text-black px-4 py-2 rounded-md"
+                  onClick={() => setShowConfirmation(false)}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

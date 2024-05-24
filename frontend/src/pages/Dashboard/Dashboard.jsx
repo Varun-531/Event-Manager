@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import PropagateLoader from "react-spinners/PropagateLoader";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -89,14 +90,18 @@ const Dashboard = () => {
   };
 
   const [eventList, setEventList] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     axios
       .get("http://localhost:4000/fetch-events")
       .then((response) => {
+        setLoading(false);
         setEventList(response.data);
         console.log(response.data);
       })
       .catch((error) => {
+        setLoading(false);
         console.error("Error fetching events:", error);
       });
   }, []);
@@ -128,50 +133,95 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="w-[100vw] mx-[10vh]">
-        {/* <h3 className="w-1/2 my-5">Explore the events happening around you</h3> */}
-        <div className="w-[80vw] mx-[5vw] mt-5">
-          {/* <h3>Closing time</h3> */}
-          {topEventsNearDate.length > 0 ? (
-            <Slider {...settings1} className="event-slider1 my-6 custom-slider">
-              {topEventsNearDate.map((event) => (
-                <div key={event.id} className="event-slide">
-                  <article
-                    className="event-article1 flex flex-col items-center"
-                    onClick={handleEvent(event._id)}
-                  >
-                    {/* <h3 className="absolute z-10 text-slate-300">
+    <>
+      {loading && (
+        <div className="loader-overlay">
+          <PropagateLoader
+            loading={loading}
+            speedMultiplier={1}
+            size={20}
+            aria-label="Loading Spinner"
+          />
+        </div>
+      )}
+      <div className="flex">
+        <div className="w-[100vw] mx-[10vh]">
+          {/* <h3 className="w-1/2 my-5">Explore the events happening around you</h3> */}
+          <div className="w-[80vw] mx-[5vw] mt-5">
+            {/* <h3>Closing time</h3> */}
+            {topEventsNearDate.length > 0 ? (
+              <Slider
+                {...settings1}
+                className="event-slider1 my-6 custom-slider"
+              >
+                {topEventsNearDate.map((event) => (
+                  <div key={event.id} className="event-slide">
+                    <article
+                      className="event-article1 flex flex-col items-center"
+                      onClick={handleEvent(event._id)}
+                    >
+                      {/* <h3 className="absolute z-10 text-slate-300">
                     {event.title}
                   </h3> */}
-                    <img
-                      src={event.image}
-                      alt={event.name}
-                      className="event-image1 relative"
-                    />
-                  </article>
-                </div>
-              ))}
-            </Slider>
-          ) : (
-            <h3>No events available</h3>
-          )}
-          <div className="mt-[25vh] flex gap-8">
-            <h3 className="text-pink-700">All Events</h3>
-            <h3>Entertainment</h3>
-            <h3>Technology</h3>
-            <h3>Music</h3>
-            <h3>Education</h3>
-            <h3>Sports</h3>
-            <h3>Culture</h3>
-            <h3>Kids</h3>
-            <h3>LifeStyle</h3>
-            <h3>Arts</h3>
-            <h3>Food</h3>
-            <h3>other</h3>
+                      <img
+                        src={event.image}
+                        alt={event.name}
+                        className="event-image1 relative"
+                      />
+                    </article>
+                  </div>
+                ))}
+              </Slider>
+            ) : (
+              <h3>No events available</h3>
+            )}
+            <div className="mt-[25vh] flex gap-8">
+              <h3 className="text-pink-700">All Events</h3>
+              <h3>Entertainment</h3>
+              <h3>Technology</h3>
+              <h3>Music</h3>
+              <h3>Education</h3>
+              <h3>Sports</h3>
+              <h3>Culture</h3>
+              <h3>Kids</h3>
+              <h3>LifeStyle</h3>
+              <h3>Arts</h3>
+              <h3>Food</h3>
+              <h3>other</h3>
+            </div>
+            {eventList.length > 0 ? (
+              <Slider {...settings} className="event-slider my-6 px-5">
+                {eventList.map((event) => (
+                  <div key={event.id} className="event-slide">
+                    <article
+                      className="event-article flex flex-col items-center"
+                      onClick={handleEvent(event._id)}
+                    >
+                      <img
+                        src={event.image}
+                        alt={event.name}
+                        className="event-image"
+                      />
+                      <div className="location-container">
+                        <p>{formatDate(event.date)}</p>
+                        {event.location}
+                      </div>
+                      <h3>{event.title}</h3>
+                    </article>
+                  </div>
+                ))}
+              </Slider>
+            ) : (
+              <h3>No events available</h3>
+            )}
           </div>
+          {/* <Link to={`/userboard`}>UserBoard</Link> */}
+
           {eventList.length > 0 ? (
-            <Slider {...settings} className="event-slider my-6 px-5">
+            <Slider
+              {...settings}
+              className="event-slider w-[80vw] mx-[5vw] mt-5 my-6 px-5"
+            >
               {eventList.map((event) => (
                 <div key={event.id} className="event-slide">
                   <article
@@ -197,38 +247,8 @@ const Dashboard = () => {
           )}
         </div>
         {/* <Link to={`/userboard`}>UserBoard</Link> */}
-
-        {eventList.length > 0 ? (
-          <Slider
-            {...settings}
-            className="event-slider w-[80vw] mx-[5vw] mt-5 my-6 px-5"
-          >
-            {eventList.map((event) => (
-              <div key={event.id} className="event-slide">
-                <article
-                  className="event-article flex flex-col items-center"
-                  onClick={handleEvent(event._id)}
-                >
-                  <img
-                    src={event.image}
-                    alt={event.name}
-                    className="event-image"
-                  />
-                  <div className="location-container">
-                    <p>{formatDate(event.date)}</p>
-                    {event.location}
-                  </div>
-                  <h3>{event.title}</h3>
-                </article>
-              </div>
-            ))}
-          </Slider>
-        ) : (
-          <h3>No events available</h3>
-        )}
       </div>
-      {/* <Link to={`/userboard`}>UserBoard</Link> */}
-    </div>
+    </>
   );
 };
 
