@@ -1,12 +1,13 @@
-// Userboard.js
 import React, { useState, useEffect } from "react";
 import "./Userboard.css";
+import Calendar from "react-calendar";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import toast from "react-hot-toast";
+// import "react-calendar/dist/Calendar.css";
 
 const Userboard = () => {
   const [cookies] = useCookies(["userId"]);
@@ -16,13 +17,17 @@ const Userboard = () => {
   const [eventsData3, setEventsData3] = useState([]);
   const [eventsData4, setEventsData4] = useState([]);
   const [Request, setRequest] = useState([]);
+  const [createdEventDates, setCreatedEventDates] = useState([]);
+  const [showCalender, setShowCalender] = useState(false);
   const [count, setCount] = useState(0);
   const [showRequestsPopup, setShowRequestsPopup] = useState(false);
   const [From, setFrom] = useState([]);
+  const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const [participatingEvents, setParticipatingEvents] = useState([]);
   const [user, setUser] = useState({});
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [eventDates, setEventDates] = useState([]);
 
   useEffect(() => {
     // Fetch user data
@@ -58,6 +63,7 @@ const Userboard = () => {
         const eventResponses = await Promise.all(eventPromises);
         const eventsData = eventResponses.map((res) => res.data);
         setEventsData1(eventsData);
+        setEventDates(eventsData.map((event) => new Date(event.date)));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching event data:", error);
@@ -127,11 +133,6 @@ const Userboard = () => {
       .get(`http://localhost:4000/fetch-requests/${userId}`)
       .then((res) => {
         setRequest(res.data);
-        // let totalCount = 0;
-        // res.data.forEach((request) => {
-        //   totalCount += request.length;
-        // });
-        // setCount(totalCount);
         setCount(res.data.length);
       })
       .catch((err) => {
@@ -139,15 +140,37 @@ const Userboard = () => {
       });
   }, [userId]);
 
-  useEffect(() => {
-    // Fetch requests received by the user
-    axios.get(`http://localhost:4000/fetch-requests/${userId}`).then((res) => {
-      setRequest(res.data);
-    });
-  }, [userId]);
-
   const handleClick = (eventId) => () => {
     navigate(`/dashboard/${eventId}`);
+  };
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/fetch-event-createdby/${userId}`)
+      .then((res) => {
+        setEventsData3(res.data);
+        setCreatedEventDates(res.data.map((event) => new Date(event.date)));
+      })
+      .catch((err) => {
+        console.error("Error fetching user data:", err);
+      });
+  }, [userId]);
+
+  const isParticipatingEventDate = (date) => {
+    return eventDates.some(
+      (eventDate) =>
+        eventDate.getFullYear() === date.getFullYear() &&
+        eventDate.getMonth() === date.getMonth() &&
+        eventDate.getDate() === date.getDate()
+    );
+  };
+
+  const isCreatedEventDate = (date) => {
+    return createdEventDates.some(
+      (eventDate) =>
+        eventDate.getFullYear() === date.getFullYear() &&
+        eventDate.getMonth() === date.getMonth() &&
+        eventDate.getDate() === date.getDate()
+    );
   };
 
   const handleRequests = () => {
@@ -163,6 +186,19 @@ const Userboard = () => {
     setShowRequestsPopup(false);
   };
 
+  const handleCalender = () => {
+    setShowCalender(!showCalender);
+  };
+
+  const isEventDate = (date) => {
+    return eventDates.some(
+      (eventDate) =>
+        eventDate.getFullYear() === date.getFullYear() &&
+        eventDate.getMonth() === date.getMonth() &&
+        eventDate.getDate() === date.getDate()
+    );
+  };
+
   return (
     <>
       {loading && (
@@ -176,14 +212,89 @@ const Userboard = () => {
         </div>
       )}
       <div className="m-10">
-        {/* <div>UserBoard</div> */}
+        {/* <Calendar
+          className="react-calendar"
+          tileClassName={({ date, view }) =>
+            view === "month" && isEventDate(date) ? "event-date" : null
+          }
+        /> */}
+        <button
+          className="bg-slate-900 text-slate-200 py-2 px-5 rounded hover:bg-slate-800 float-right"
+          onClick={handleCalender}
+        >
+          Calendar
+        </button>
+        {showCalender && (
+          <>
+            <div className="flex gap-10">
+              <Calendar
+                className="react-calendar"
+                tileClassName={({ date, view }) => {
+                  if (view === "month") {
+                    if (isParticipatingEventDate(date)) {
+                      return "participating-event-date";
+                    }
+                    if (isCreatedEventDate(date)) {
+                      return "created-event-date";
+                    }
+                  }
+                  return null;
+                }}
+                onClickDay={(value) => {
+                  // Find participating events that match the clicked date
+                  const participatingEvents = eventsData1.filter((event) => {
+                    const eventDate = new Date(event.date);
+                    return (
+                      eventDate.getFullYear() === value.getFullYear() &&
+                      eventDate.getMonth() === value.getMonth() &&
+                      eventDate.getDate() === value.getDate()
+                    );
+                  });
+
+                  // Find created events that match the clicked date
+                  const createdEvents = eventsData3.filter((event) => {
+                    const eventDate = new Date(event.date);
+                    return (
+                      eventDate.getFullYear() === value.getFullYear() &&
+                      eventDate.getMonth() === value.getMonth() &&
+                      eventDate.getDate() === value.getDate()
+                    );
+                  });
+
+                  // Combine the event IDs from both participating and created events
+                  const eventIds = [
+                    ...participatingEvents,
+                    ...createdEvents,
+                  ].map((event) => event._id);
+
+                  // Set the state with the event IDs
+                  setSelectedDateEvents(eventIds);
+                }}
+              />
+
+              <h3>Hello</h3>
+              <div className="event-ids">
+                {selectedDateEvents.length > 0 ? (
+                  <ul>
+                    {selectedDateEvents.map((eventId) => (
+                      <li key={eventId}>{eventId}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No events for this date.</p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+
         <div>
           <h2>Participating Events</h2>
           <div className="flex flex-wrap gap-1">
             {eventsData1.length > 0 ? (
               eventsData1.map((event) => (
                 <div
-                  className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer"
+                  className="m-5 w-[25vw] p-5 rounded cursor-pointer box"
                   onClick={handleClick(event._id)}
                   key={event._id}
                 >
@@ -215,7 +326,7 @@ const Userboard = () => {
             {eventsData2.length > 0 ? (
               eventsData2.map((event) => (
                 <div
-                  className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer"
+                  className="box m-5 w-[25vw] p-5 rounded cursor-pointer"
                   onClick={handleClick(event._id)}
                   key={event._id}
                 >
@@ -280,8 +391,7 @@ const Userboard = () => {
             {eventsData3.length > 0 ? (
               eventsData3.map((eventItem) => (
                 <div
-                  className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
-                  // onClick={handleClick(eventItem._id)}
+                  className="box m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
                   key={eventItem._id}
                   onClick={handleClick(eventItem._id)}
                 >
@@ -302,16 +412,6 @@ const Userboard = () => {
                       <p className="">{eventItem.location}</p>
                     </div>
                   </div>
-                  {/* <div className="flex justify-center items-center"> */}
-                  {/* <button
-                      className="event bg-slate-800 text-slate-50 p-4 rounded"
-                      onClick={handleRequests}
-                    >
-                      {eventItem && eventItem.requestsId
-                        ? eventItem.requestsId.length
-                        : 0}
-                    </button> */}
-                  {/* </div> */}
                 </div>
               ))
             ) : (
@@ -319,40 +419,6 @@ const Userboard = () => {
             )}
           </div>
         </div>
-        {/*<div>
-        <h2>Requests</h2>
-    {eventsData4.length > 0 ? (
-       <div className="flex flex-wrap gap-1">
-           {eventsData4.map((event) => (
-             <div
-                className="bg-slate-300 m-5 w-[25vw] p-5 rounded cursor-pointer"
-                onClick={handleClick(event._id)}
-                key={event._id}
-             >
-                <h3>{event.title}</h3>
-                <div className="flex items-center gap-1 my-2">
-                  <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
-                  <p>
-                      {Math.ceil(
-                        (new Date(event.date) - new Date()) /
-                            (1000 * 60 * 60 * 24)
-                      )}{" "}
-                      days remaining
-                  </p>
-                </div>
-                {Request.map((req) => {
-                  if (req._id === event.requestsId) {
-                      return <p key={req._id}>{req.from}</p>;
-                  }
-                  return null;
-                })}
-              </div>
-          ))}
-        </div>
-       ) : (
-         <h3>No Events</h3>
-       )}
-        */}
         {showRequestsPopup && (
           <RequestDetailsPopup requests={Request} closePopup={closePopup} />
         )}

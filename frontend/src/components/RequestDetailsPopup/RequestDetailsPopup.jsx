@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import { toast } from "react-hot-toast";
+// import wave from "./wave.svg"
 
 const RequestDetailsPopup = ({ requests, closePopup }) => {
   const [senderData, setSenderData] = useState({});
@@ -109,7 +110,7 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
                   {request.status === "Pending" ? (
                     <div className="flex gap-1">
                       <button
-                        className="button-poppup bg-green-700 text-slate-100 text-sm p-1 rounded"
+                        className="button-poppup bg-green-700 text-slate-100 text-sm p-2 rounded"
                         onClick={() => handleAccept(request._id)}
                       >
                         Accept

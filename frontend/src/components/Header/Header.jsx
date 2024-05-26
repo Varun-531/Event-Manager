@@ -66,6 +66,7 @@ import { useCookies } from "react-cookie";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider"; // Adjust the path as necessary
 import toast from "react-hot-toast";
+import logo from "./calender-day-love-svgrepo-com.svg";
 
 const Header = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -88,9 +89,12 @@ const Header = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="flex justify-between bg-slate-900 p-7 items-center">
-      <div className="text-slate-200 font-semibold text-xl">
-        <Link to="/">Event Manager</Link>
+    <div className="flex justify-between bg-slate-900 p-3 items-center">
+      <div className=" flex items-center">
+        <img src={logo} alt="logo" className="w-14" />
+        <Link className="text-slate-200 font-semibold text-xl" to="/">
+          Event Manager
+        </Link>
       </div>
       <nav className="text-slate-200">
         <ul className="flex justify-center gap-7">
