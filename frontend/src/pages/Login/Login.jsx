@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Login.css";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -6,8 +6,11 @@ import LoginSvg from "./14230944_5437681.svg";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import PropagateLoader from "react-spinners/PropagateLoader";
+// import { useContext } from "react";
+import { AuthContext } from "../../context/AuthProvider";
 
 const Login = () => {
+  // const { isAuthenticated, login, logout } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [first, setFirst] = useState(false);
   const [second, setSecond] = useState(true);
@@ -23,10 +26,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [login, setLogin] = useState(true);
+  const [login2, setLogin2] = useState(true);
   const [cookies, setCookie] = useCookies(["token", "userId"]);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const handleLogin = (event) => {
     event.preventDefault();
     axios
@@ -47,6 +51,7 @@ const Login = () => {
           { maxAge: 60 * 60 * 24 }
         );
         navigate("/");
+        login();
       })
       .catch((err) => {
         console.error(err);
@@ -203,7 +208,7 @@ const Login = () => {
       <div className="login-background h-full flex justify-center">
         <div className="login-container flex gap-7 justify-center items-center bg-orange-100 rounded p-14">
           <img src={LoginSvg} alt="svg" className="h-[60vh]" />
-          {login ? (
+          {login2 ? (
             <div className="temp flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
               <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -416,7 +421,7 @@ const Login = () => {
                   <a
                     // href="/register"
                     onClick={() => {
-                      setLogin(false);
+                      setLogin2(false);
                     }}
                     className="font-semibold leading-6 text-orange-500 hover:text-orange-400 cursor-pointer"
                   >
@@ -586,7 +591,7 @@ const Login = () => {
                   Already a member?
                   <a
                     // href="/register"
-                    onClick={() => setLogin(true)}
+                    onClick={() => setLogin2(true)}
                     className="font-semibold leading-6 text-orange-500 hover:text-orange-400 cursor-pointer"
                   >
                     {" "}

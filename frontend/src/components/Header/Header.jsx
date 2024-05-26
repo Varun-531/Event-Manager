@@ -1,33 +1,91 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+// import React, { useContext } from "react";
+// import { useCookies } from "react-cookie";
+// import { Link, useNavigate } from "react-router-dom";
+// import { AuthContext } from "../../context/AuthProvider"; // Adjust the path as necessary
+// import toast from "react-hot-toast";
+
+// const Header = () => {
+//   const { isAuthenticated, login, logout } = useContext(AuthContext);
+//   const navigate = useNavigate();
+//   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+//   const handleLogin = () => {
+//     navigate("/login"); // Navigate to the user board after login
+//   };
+//   const handleLogout = () => {
+//     logout();
+//     removeCookie("userId", { path: "/" });
+//     toast.success("Logged out successfully");
+//     navigate("/"); // Navigate to the home page after logout
+//   };
+//   const handleDash = () => {
+//     navigate("/dashboard");
+//   };
+
+//   return (
+//     <div className="flex justify-between bg-slate-900 p-7 items-center">
+//       <div className="text-slate-200 font-semibold text-xl">
+//         <Link to="/">Event Manager</Link>
+//       </div>
+//       <nav className="text-slate-200">
+//         <ul className="flex justify-center gap-7">
+//           {isAuthenticated ? (
+//             <>
+//               <li>
+//                 <button onClick={() => navigate("/create-event")}>
+//                   Create Event
+//                 </button>
+//               </li>
+//               <li className="cursor-pointer" onClick={handleDash}>
+//                 Dashboard
+//               </li>
+//               <li
+//                 className="headerLink cursor-pointer"
+//                 onClick={() => navigate("/userboard")}
+//               >
+//                 UserBoard
+//               </li>
+//               <li>
+//                 <button onClick={handleLogout}>Logout</button>
+//               </li>
+//             </>
+//           ) : (
+//             <li>
+//               <button onClick={handleLogin}>Login</button>
+//             </li>
+//           )}
+//         </ul>
+//       </nav>
+//     </div>
+//   );
+// };
+
+// export default Header;
+
+import React, { useContext } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider"; // Adjust the path as necessary
+import toast from "react-hot-toast";
 
 const Header = () => {
+  const { isAuthenticated, login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-  const [login, setLogin] = useState(false);
 
-  useEffect(() => {
-    setLogin(!!cookies.userId && !!cookies.token);
-  }, [cookies]);
-
-  const handleUserBoard = useCallback(() => {
-    navigate("/userboard");
-  }, [navigate]);
-
-  const handleCreateEvent = () => {
-    navigate("/create-event");
+  const handleLogin = () => {
+    navigate("/login"); // Navigate to the login page
   };
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = () => {
+    logout();
     removeCookie("userId", { path: "/" });
-    removeCookie("token", { path: "/" });
-    setLogin(false);
-    navigate("/");
     toast.success("Logged out successfully");
-  }, [removeCookie, navigate]);
+    navigate("/"); // Navigate to the home page after logout
+  };
+
+  // Function to determine if the link should be highlighted
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div className="flex justify-between bg-slate-900 p-7 items-center">
@@ -36,17 +94,34 @@ const Header = () => {
       </div>
       <nav className="text-slate-200">
         <ul className="flex justify-center gap-7">
-          {/* <li>
-            <Link className="headerLink" to="/dashboard">Dashboard</Link>
-          </li> */}
-          {login ? (
+          {isAuthenticated ? (
             <>
               <li>
-                <button onClick={handleCreateEvent}>Create Event</button>
+                <button
+                  onClick={() => navigate("/create-event")}
+                  className={
+                    isActive("/create-event")
+                      ? "text-slate-500 font-semibold"
+                      : ""
+                  }
+                >
+                  Create Event
+                </button>
               </li>
               <li
-                onClick={handleUserBoard}
-                className="headerLink cursor-pointer"
+                className={`cursor-pointer ${
+                  isActive("/dashboard") ? "text-slate-500 font-semibold" : ""
+                }`}
+                onClick={() => navigate("/dashboard")}
+              >
+                Dashboard
+              </li>
+              <li
+                // className="headerLink cursor-pointer"
+                className={`cursor-pointer ${
+                  isActive("/userboard") ? "text-slate-500 font-semibold" : ""
+                }`}
+                onClick={() => navigate("/userboard")}
               >
                 UserBoard
               </li>
@@ -55,13 +130,9 @@ const Header = () => {
               </li>
             </>
           ) : (
-            <>
-              <li>
-                <Link className="headerLink" to="/login">
-                  Login
-                </Link>
-              </li>
-            </>
+            <li>
+              <button onClick={handleLogin}>Login</button>
+            </li>
           )}
         </ul>
       </nav>
