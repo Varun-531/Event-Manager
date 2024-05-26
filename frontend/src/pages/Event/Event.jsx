@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./Event.css";
 import { useCookies } from "react-cookie";
+import Confetti from "react-confetti";
+import useWindowSize from "react-use/lib/useWindowSize";
 import { toast } from "react-hot-toast";
 import popcorn from "./popcorn-svgrepo-com.svg";
 import satelite from "./satellite-svgrepo-com.svg";
@@ -22,6 +24,7 @@ const Event = () => {
   const [event, setEvent] = useState({ attendees: [] });
   const [creator, setCreator] = useState({});
   const [bookOption, setBookOption] = useState("");
+  const { width, height } = useWindowSize();
   const [occupancy, setOccupancy] = useState(0);
   const [Booked, setBooked] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,6 +34,7 @@ const Event = () => {
   const [cookies] = useCookies(["userId"]);
   const userId = cookies.userId;
   const [att, setAtt] = useState(0);
+  const [recent, setRecent] = useState(false);
 
   useEffect(() => {
     axios
@@ -133,6 +137,7 @@ const Event = () => {
             setAtt(att + 1);
             setBookText("Booked");
             setLoading(false);
+            setRecent(true);
           })
           .catch((err) => {
             console.error("Error booking event:", err);
@@ -180,6 +185,18 @@ const Event = () => {
         </div>
       )}
       <div className="">
+        {recent && (
+          <Confetti
+            width={width}
+            height={height}
+            run={true}
+            recycle={false}
+            numberOfPieces={1000}
+            // wind={0.1}
+            // gravity={0.1}
+            tweenDuration={1000}
+          />
+        )}
         <div className="m-10 mx-20">
           <div className="flex gap-3">
             <div className="image-container">
