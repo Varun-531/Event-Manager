@@ -197,6 +197,23 @@ app.post("/otp-verification", async (req, res) => {
   }
 });
 
+app.post("/change-password", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.get("/fetch-events", async (req, res) => {
   try {
     const events = await Event.find();
