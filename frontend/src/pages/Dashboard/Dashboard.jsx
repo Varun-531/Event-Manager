@@ -177,18 +177,18 @@ const Dashboard = () => {
               <h3>No events available</h3>
             )}
             <div className="mt-[25vh] flex gap-8">
-              <h3 className="text-pink-700">All Events</h3>
-              <h3>Entertainment</h3>
-              <h3>Technology</h3>
-              <h3>Music</h3>
-              <h3>Education</h3>
-              <h3>Sports</h3>
-              <h3>Culture</h3>
-              <h3>Kids</h3>
-              <h3>LifeStyle</h3>
-              <h3>Arts</h3>
-              <h3>Food</h3>
-              <h3>other</h3>
+              <h4 className="font-medium text-pink-700">All Events</h4>
+              <h4 className="font-medium text-slate-700">Entertainment</h4>
+              <h4 className="font-medium text-slate-700">Technology</h4>
+              <h4 className="font-medium text-slate-700">Music</h4>
+              <h4 className="font-medium text-slate-700">Education</h4>
+              <h4 className="font-medium text-slate-700">Sports</h4>
+              <h4 className="font-medium text-slate-700">Culture</h4>
+              <h4 className="font-medium text-slate-700">Kids</h4>
+              <h4 className="font-medium text-slate-700">LifeStyle</h4>
+              <h4 className="font-medium text-slate-700">Arts</h4>
+              <h4 className="font-medium text-slate-700">Food</h4>
+              <h4 className="font-medium text-slate-700">other</h4>
             </div>
             {eventList.length > 0 ? (
               <Slider {...settings} className="event-slider my-6 px-5">

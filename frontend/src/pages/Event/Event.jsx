@@ -700,7 +700,7 @@ const Event = () => {
                 <ul>
                   {attendeeDetails.map((attendee, index) => (
                     <li key={index} className="attendee-item">
-                      <p>
+                      <p className="mt-3">
                         {attendee.username} - {attendee.email}
                       </p>
                     </li>
