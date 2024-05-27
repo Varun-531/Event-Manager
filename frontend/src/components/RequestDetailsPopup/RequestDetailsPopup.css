@@ -1,5 +1,5 @@
-.button-poppup{
-    /* background-color: ; */
+.button-poppup {
+  /* background-color: ; */
 }
 /* .popup{
     border: 2px solid black;
@@ -11,3 +11,68 @@
 .popup-button-decline{
     background-color: #f63236;
 } */
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.popup-inner-content {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.div {
+  background-image: url("./wave.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.user {
+  font-size: 1rem;
+  color: black;
+  /* font-weight: 700; */
+}
+.user2 {
+  font-size: 1rem;
+  color: black;
+}

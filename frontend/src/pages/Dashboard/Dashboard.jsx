@@ -201,13 +201,19 @@ const Dashboard = () => {
                       <img
                         src={event.image}
                         alt={event.name}
-                        className="event-image"
+                        className="event-image rounded"
                       />
                       <div className="location-container">
-                        <p>{formatDate(event.date)}</p>
-                        {event.location}
+                        {/* <p>{formatDate(event.date)}</p>
+                        {event.location} */}
+                        <h3>{event.title}</h3>
                       </div>
-                      <h3>{event.title}</h3>
+                      <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
+                        {formatDate(event.date)}
+                      </h3>
+                      <h3 className="absolute bg-slate-200 p-1 rounded bottom-4 left-4 text-sm">
+                        {event.category}
+                      </h3>
                     </article>
                   </div>
                 ))}

@@ -695,17 +695,21 @@ const Event = () => {
             {bookText === "Creator" && (
               <>
                 <h3 className="font-semibold underline underline-offset-4">
-                  Participants
+                  Attendees
                 </h3>
-                <ul>
-                  {attendeeDetails.map((attendee, index) => (
-                    <li key={index} className="attendee-item">
-                      <p className="mt-3">
-                        {attendee.username} - {attendee.email}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                {event.attendees.length > 0 ? (
+                  <ul>
+                    {attendeeDetails.map((attendee, index) => (
+                      <li key={index} className="attendee-item">
+                        <p className="mt-3">
+                          {attendee.username} - {attendee.email}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <h3>No Attendees</h3>
+                )}
               </>
             )}
           </div>

@@ -10,9 +10,11 @@
 }
 
 .event-article {
-  background-color: #f0f0f0;
-  padding: 10px;
+  /* background-color: #f0f0f0; */
+  /* padding: 10px; */
   border-radius: 5px;
+  /* border-radius: 10px; */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative; /* Ensure relative positioning for absolute positioning */
 }
 
@@ -29,16 +31,15 @@
 }
 
 .event-image:hover {
-  filter: brightness(40%); /* Darken the image on hover */
+  filter: brightness(40%);
 }
 
 .location-container {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 40%;
   /* background-color: rgba(0, 0, 0, 0.5); */
   color: white;
-  padding: 5px;
+  /* padding: 5px; */
   border-radius: 5px;
   opacity: 0; /* Initially hide location */
   visibility: hidden; /* Initially hide location */

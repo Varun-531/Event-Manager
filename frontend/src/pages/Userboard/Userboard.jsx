@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import toast from "react-hot-toast";
-// import "react-calendar/dist/Calendar.css";
+import sad from "./sad-svgrepo-com.svg";
 
 const Userboard = () => {
   const [cookies] = useCookies(["userId"]);
@@ -133,7 +133,9 @@ const Userboard = () => {
       .get(`http://localhost:4000/fetch-requests/${userId}`)
       .then((res) => {
         setRequest(res.data);
-        setCount(res.data.length);
+        setCount(
+          res.data.filter((request) => request.status === "Pending").length
+        );
       })
       .catch((err) => {
         console.error("Error fetching requests:", err);
@@ -175,7 +177,8 @@ const Userboard = () => {
 
   const handleRequests = () => {
     if (count === 0) {
-      toast.error("No requests to show");
+      // toast.error("No requests to show");
+      setShowRequestsPopup(true);
       return;
     } else {
       setShowRequestsPopup(true);
@@ -188,6 +191,10 @@ const Userboard = () => {
 
   const handleCalender = () => {
     setShowCalender(!showCalender);
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
   };
 
   const isEventDate = (date) => {
@@ -211,197 +218,100 @@ const Userboard = () => {
           />
         </div>
       )}
-      <div className="m-10">
-        {/* <Calendar
+      {userId ? (
+        <div className="m-10">
+          {/* <Calendar
           className="react-calendar"
           tileClassName={({ date, view }) =>
             view === "month" && isEventDate(date) ? "event-date" : null
           }
         /> */}
-        <button
-          className="bg-slate-900 text-slate-200 py-2 px-5 rounded hover:bg-slate-800 float-right"
-          onClick={handleCalender}
-        >
-          Calendar
-        </button>
-        {showCalender && (
-          <>
-            <div className="flex gap-10">
-              <Calendar
-                className="react-calendar"
-                tileClassName={({ date, view }) => {
-                  if (view === "month") {
-                    if (isParticipatingEventDate(date)) {
-                      return "participating-event-date";
-                    }
-                    if (isCreatedEventDate(date)) {
-                      return "created-event-date";
-                    }
-                  }
-                  return null;
-                }}
-                onClickDay={(value) => {
-                  // Find participating events that match the clicked date
-                  const participatingEvents = eventsData1.filter((event) => {
-                    const eventDate = new Date(event.date);
-                    return (
-                      eventDate.getFullYear() === value.getFullYear() &&
-                      eventDate.getMonth() === value.getMonth() &&
-                      eventDate.getDate() === value.getDate()
-                    );
-                  });
-
-                  // Find created events that match the clicked date
-                  const createdEvents = eventsData3.filter((event) => {
-                    const eventDate = new Date(event.date);
-                    return (
-                      eventDate.getFullYear() === value.getFullYear() &&
-                      eventDate.getMonth() === value.getMonth() &&
-                      eventDate.getDate() === value.getDate()
-                    );
-                  });
-
-                  // Combine the event IDs from both participating and created events
-                  const eventIds = [
-                    ...participatingEvents,
-                    ...createdEvents,
-                  ].map((event) => event._id);
-
-                  // Set the state with the event IDs
-                  setSelectedDateEvents(eventIds);
-                }}
-              />
-
-              <h3>Hello</h3>
-              <div className="event-ids">
-                {selectedDateEvents.length > 0 ? (
-                  <ul>
-                    {selectedDateEvents.map((eventId) => (
-                      <li key={eventId}>{eventId}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No events for this date.</p>
-                )}
-              </div>
-            </div>
-          </>
-        )}
-
-        <div>
-          <h2>Participating Events</h2>
-          <div className="flex flex-wrap gap-1">
-            {eventsData1.length > 0 ? (
-              eventsData1.map((event) => (
-                <div
-                  className="m-5 w-[25vw] p-5 rounded cursor-pointer box"
-                  onClick={handleClick(event._id)}
-                  key={event._id}
-                >
-                  <h3>{event.title}</h3>
-                  <div className="flex items-center gap-1 my-2">
-                    <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
-                    <p>
-                      {Math.ceil(
-                        (new Date(event.date) - new Date()) /
-                          (1000 * 60 * 60 * 24)
-                      )}{" "}
-                      days remaining
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 my-2">
-                    <i className="fi fi-rr-marker mt-1 mr-1"></i>
-                    <p className="">{event.location}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <h3>No Events</h3>
-            )}
-          </div>
-        </div>
-        <div>
-          <h2>Your Requests</h2>
-          <div className="flex flex-wrap gap-1">
-            {eventsData2.length > 0 ? (
-              eventsData2.map((event) => (
-                <div
-                  className="box m-5 w-[25vw] p-5 rounded cursor-pointer"
-                  onClick={handleClick(event._id)}
-                  key={event._id}
-                >
-                  <h3>{event.title}</h3>
-                  <div className="flex items-center gap-1 my-2">
-                    <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
-                    <p>
-                      {Math.ceil(
-                        (new Date(event.date) - new Date()) /
-                          (1000 * 60 * 60 * 24)
-                      )}{" "}
-                      days remaining
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 my-2">
-                    <i className="fi fi-rr-marker mt-1 mr-1"></i>
-                    <p className="">{event.location}</p>
-                  </div>
-                  {From.map((from) => {
-                    if (from.eventId === event._id) {
-                      return (
-                        <div key={from._id}>
-                          <p>
-                            Status:{" "}
-                            {from.status === "Accepted" ? (
-                              <span className="text-green-500">
-                                {from.status}
-                              </span>
-                            ) : from.status === "Declined" ? (
-                              <span className="text-red-500">
-                                {from.status}
-                              </span>
-                            ) : from.status === "Pending" ? (
-                              <span className="text-yellow-500">
-                                {from.status}
-                              </span>
-                            ) : null}
-                          </p>
-                        </div>
-                      );
+          <button
+            className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800 float-right"
+            onClick={handleCalender}
+          >
+            Calendar
+          </button>
+          {showCalender && (
+            <>
+              <div className="flex gap-10">
+                <Calendar
+                  className="react-calendar"
+                  tileClassName={({ date, view }) => {
+                    if (view === "month") {
+                      if (isParticipatingEventDate(date)) {
+                        return "participating-event-date";
+                      }
+                      if (isCreatedEventDate(date)) {
+                        return "created-event-date";
+                      }
                     }
                     return null;
-                  })}
+                  }}
+                  onClickDay={(value) => {
+                    // Find participating events that match the clicked date
+                    const participatingEvents = eventsData1.filter((event) => {
+                      const eventDate = new Date(event.date);
+                      return (
+                        eventDate.getFullYear() === value.getFullYear() &&
+                        eventDate.getMonth() === value.getMonth() &&
+                        eventDate.getDate() === value.getDate()
+                      );
+                    });
+
+                    // Find created events that match the clicked date
+                    const createdEvents = eventsData3.filter((event) => {
+                      const eventDate = new Date(event.date);
+                      return (
+                        eventDate.getFullYear() === value.getFullYear() &&
+                        eventDate.getMonth() === value.getMonth() &&
+                        eventDate.getDate() === value.getDate()
+                      );
+                    });
+
+                    // Combine the event IDs from both participating and created events
+                    const eventIds = [
+                      ...participatingEvents,
+                      ...createdEvents,
+                    ].map((event) => event._id);
+
+                    // Set the state with the event IDs
+                    setSelectedDateEvents(eventIds);
+                  }}
+                />
+
+                <h3>Hello</h3>
+                <div className="event-ids">
+                  {selectedDateEvents.length > 0 ? (
+                    <ul>
+                      {selectedDateEvents.map((eventId) => (
+                        <li key={eventId}>{eventId}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No events for this date.</p>
+                  )}
                 </div>
-              ))
-            ) : (
-              <h3 className="m-7">No Events</h3>
-            )}
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between">
-            <h2>Created Events</h2>
-            <button
-              className="bg-slate-900 text-slate-200 py-2 px-5 rounded hover:bg-slate-800"
-              onClick={handleRequests}
-            >
-              Requests <span className="ml-2">{count}</span>
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-1">
-            {eventsData3.length > 0 ? (
-              eventsData3.map((eventItem) => (
-                <div
-                  className="box m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
-                  key={eventItem._id}
-                  onClick={handleClick(eventItem._id)}
-                >
-                  <div>
-                    <h3>{eventItem.title}</h3>
+              </div>
+            </>
+          )}
+
+          <div>
+            <h2>Participating Events</h2>
+            <div className="flex flex-wrap gap-1">
+              {eventsData1.length > 0 ? (
+                eventsData1.map((event) => (
+                  <div
+                    className="m-5 w-[25vw] p-5 rounded cursor-pointer box"
+                    onClick={handleClick(event._id)}
+                    key={event._id}
+                  >
+                    <h3>{event.title}</h3>
                     <div className="flex items-center gap-1 my-2">
                       <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
                       <p>
                         {Math.ceil(
-                          (new Date(eventItem.date) - new Date()) /
+                          (new Date(event.date) - new Date()) /
                             (1000 * 60 * 60 * 24)
                         )}{" "}
                         days remaining
@@ -409,20 +319,137 @@ const Userboard = () => {
                     </div>
                     <div className="flex items-center gap-1 my-2">
                       <i className="fi fi-rr-marker mt-1 mr-1"></i>
-                      <p className="">{eventItem.location}</p>
+                      <p className="">{event.location}</p>
                     </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <h3>No Events</h3>
-            )}
+                ))
+              ) : (
+                <h3>No Events</h3>
+              )}
+            </div>
+          </div>
+          <div>
+            <h2>Your Requests</h2>
+            <div className="flex flex-wrap gap-1">
+              {eventsData2.length > 0 ? (
+                eventsData2.map((event) => (
+                  <div
+                    className="box m-5 w-[25vw] p-5 rounded cursor-pointer"
+                    onClick={handleClick(event._id)}
+                    key={event._id}
+                  >
+                    <h3>{event.title}</h3>
+                    <div className="flex items-center gap-1 my-2">
+                      <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
+                      <p>
+                        {Math.ceil(
+                          (new Date(event.date) - new Date()) /
+                            (1000 * 60 * 60 * 24)
+                        )}{" "}
+                        days remaining
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1 my-2">
+                      <i className="fi fi-rr-marker mt-1 mr-1"></i>
+                      <p className="">{event.location}</p>
+                    </div>
+                    {From.map((from) => {
+                      if (from.eventId === event._id) {
+                        return (
+                          <div key={from._id}>
+                            <p>
+                              Status:{" "}
+                              {from.status === "Accepted" ? (
+                                <span className="text-green-500">
+                                  {from.status}
+                                </span>
+                              ) : from.status === "Declined" ? (
+                                <span className="text-red-500">
+                                  {from.status}
+                                </span>
+                              ) : from.status === "Pending" ? (
+                                <span className="text-yellow-500">
+                                  {from.status}
+                                </span>
+                              ) : null}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                ))
+              ) : (
+                <h3 className="m-7">No Events</h3>
+              )}
+            </div>
+          </div>
+          <div>
+            <div className="flex justify-between">
+              <h2>Created Events</h2>
+              <button
+                className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800"
+                onClick={handleRequests}
+              >
+                Requests {count > 0 && <span className="badge">{count}</span>}
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {eventsData3.length > 0 ? (
+                eventsData3.map((eventItem) => (
+                  <div
+                    className="box m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
+                    key={eventItem._id}
+                    onClick={handleClick(eventItem._id)}
+                  >
+                    <div>
+                      <h3>{eventItem.title}</h3>
+                      <div className="flex items-center gap-1 my-2">
+                        <i className="fi fi-rr-time-quarter-to mt-1 mr-1"></i>
+                        <p>
+                          {Math.ceil(
+                            (new Date(eventItem.date) - new Date()) /
+                              (1000 * 60 * 60 * 24)
+                          )}{" "}
+                          days remaining
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 my-2">
+                        <i className="fi fi-rr-marker mt-1 mr-1"></i>
+                        <p className="">{eventItem.location}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <h3>No Events</h3>
+              )}
+            </div>
+          </div>
+          {showRequestsPopup && (
+            <RequestDetailsPopup requests={Request} closePopup={closePopup} />
+          )}
+        </div>
+      ) : (
+        <div className="flex justify-center h-[90vh]">
+          <div className="flex justify-center items-center gap-10">
+            <img src={sad} className="h-[30vh]"></img>
+            <div>
+              <h3 className="text-3xl">You are not logged in</h3>
+              <p className="text-lg">
+                Please login to view your userboard and requests
+              </p>
+              <button
+                className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800"
+                onClick={handleLogin}
+              >
+                Login
+              </button>
+            </div>
           </div>
         </div>
-        {showRequestsPopup && (
-          <RequestDetailsPopup requests={Request} closePopup={closePopup} />
-        )}
-      </div>
+      )}
     </>
   );
 };
