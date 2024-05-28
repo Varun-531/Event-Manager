@@ -224,6 +224,17 @@ app.get("/fetch-events", async (req, res) => {
   }
 });
 
+app.get("/fetch-events-reverse", async (req, res) => {
+  try {
+    const events = await Event.find();
+    events.reverse();
+    return res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.get("/fetch-events-by-category/:category", async (req, res) => {
   const { category } = req.params;
   try {

@@ -27,7 +27,10 @@
 .event-image1 {
   width: 70vw;
   height: 80vh;
-  /* filter:brightness(40%); */
+  filter: brightness(40%);
+}
+.event-image1:hover {
+  filter: brightness(40%);
 }
 
 .event-image:hover {
@@ -99,3 +102,14 @@ article {
   background-position: center;
   height: 100vh;
 } */
+.box {
+  min-width: 15vw;
+}
+.boxx {
+  background: rgb(234, 241, 242);
+  background: linear-gradient(
+    180deg,
+    rgba(234, 241, 242, 1) 0%,
+    rgba(205, 244, 255, 1) 100%
+  );
+}

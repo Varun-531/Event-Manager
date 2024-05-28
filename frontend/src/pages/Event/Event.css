@@ -1,12 +1,12 @@
-.image{
-    width: 60vw;
-    height: 60vh;
-    border-radius: 5px;
+.image {
+  width: 60vw;
+  height: 60vh;
+  border-radius: 5px;
 }
-.image-container{
-    padding-right: 10px;
-    /* border-right: 1.5px solid gray; */
-    width: fit-content;
+.image-container {
+  padding-right: 10px;
+  /* border-right: 1.5px solid gray; */
+  width: fit-content;
 }
 /* .details{
     padding: 10px;
@@ -15,27 +15,24 @@
     width: 30vw;
     height: 25vh;
 } */
-.details{
-    padding: 10px;
-    border: 2px solid #767B91;
-    border-radius: 5px;
-    width: 30vw;
-    height: fit-content;
+.details {
+  padding: 10px;
+  border: 2px solid #767b91;
+  border-radius: 5px;
+  width: 30vw;
+  /* height: fit-content; */
 }
-.details p{
-    
-}
-body{
-    background-color:#FCFCFC;
-}
-.svg{
-    width: 10vw;
-    height: auto;
-    padding: 10px;
-}
-#bookmark{
 
+body {
+  background-color: #fcfcfc;
 }
-.booked{
-    border:  2px solid #db2777;
+.svg {
+  width: 10vw;
+  height: auto;
+  padding: 10px;
+}
+#bookmark {
+}
+.booked {
+  border: 2px solid #db2777;
 }

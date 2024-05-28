@@ -600,7 +600,7 @@ const Event = () => {
               <img src={event.image} className="image" alt="Event" />
             </div>
             <div className="">
-              <div className="details flex items-center justify-between">
+              <div className="details flex items-center justify-between ">
                 <div className="flex flex-col gap-2">
                   <h2 className="font-semibold absolute truncate w-[28vw]">
                     {event.title}
