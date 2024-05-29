@@ -105,13 +105,13 @@ const CreateEvent = () => {
           />
         </div>
       )}
-      <div className="p-10 bg-rose-800">
+      <div className="p-1 ">
         <div className="bg-rose-100   rounded">
           <div className="flex justify-center">
             <div className="w-1/2 p-10">
               <form
                 onSubmit={handleSubmit}
-                className="flex flex-col w-3/4 ml-10 gap-y-2"
+                className="flex flex-col w-4/4 ml-10 gap-y-2"
               >
                 <h1 className="text-xl font-medium">Add Event</h1>
                 <label className="block text-sm font-medium leading-6 text-gray-900">

@@ -38,7 +38,7 @@ select {
 }
 .div-img {
   background-image: url(./pexels-arts-1547813.jpg);
-  width: 50vw;
+  width: 45vw;
   background-position: center;
   background-size: cover;
   padding: 0;
@@ -53,11 +53,12 @@ input[type="time"] {
   text-align: center;
   /* padding: 10px; */
 }
-select:focus{
+select:focus {
   resize: none;
   padding: 8px;
 }
-#price,#pincode{
+#price,
+#pincode {
   width: 10vw;
   /* padding: 10px; */
 }

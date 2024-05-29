@@ -2,16 +2,19 @@ import React, { useState, useEffect } from "react";
 import "./Userboard.css";
 import Calendar from "react-calendar";
 import { useCookies } from "react-cookie";
+import useWindowSize from "react-use/lib/useWindowSize";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import RequestDetailsPopup from "../../components/RequestDetailsPopup/RequestDetailsPopup.jsx";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import toast from "react-hot-toast";
 import sad from "./sad-svgrepo-com.svg";
+import CreateEvent from "../CreateEvent/CreateEvent.jsx";
 
 const Userboard = () => {
   const [cookies] = useCookies(["userId"]);
   const userId = cookies.userId;
+  const { width, height } = useWindowSize();
   const [eventsData1, setEventsData1] = useState([]);
   const [eventsData2, setEventsData2] = useState([]);
   const [eventsData3, setEventsData3] = useState([]);
@@ -28,6 +31,7 @@ const Userboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [eventDates, setEventDates] = useState([]);
+  const [activeSection, setActiveSection] = useState("participating");
 
   useEffect(() => {
     // Fetch user data
@@ -206,109 +210,19 @@ const Userboard = () => {
     );
   };
 
-  return (
-    <>
-      {loading && (
-        <div className="loader-overlay">
-          <PropagateLoader
-            loading={loading}
-            speedMultiplier={1}
-            size={20}
-            aria-label="Loading Spinner"
-          />
-        </div>
-      )}
-      {userId ? (
-        <div className="m-10">
-          {/* <Calendar
-          className="react-calendar"
-          tileClassName={({ date, view }) =>
-            view === "month" && isEventDate(date) ? "event-date" : null
-          }
-        /> */}
-          {/* <button
-            className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800 float-right"
-            onClick={handleCalender}
-          >
-            Calendar
-          </button> */}
-          <button
-            onClick={() => navigate("/create-event")}
-            className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800 float-right"
-          >
-            Create Event
-          </button>
-          {showCalender && (
-            <>
-              <div className="flex gap-10">
-                <Calendar
-                  className="react-calendar"
-                  tileClassName={({ date, view }) => {
-                    if (view === "month") {
-                      if (isParticipatingEventDate(date)) {
-                        return "participating-event-date";
-                      }
-                      if (isCreatedEventDate(date)) {
-                        return "created-event-date";
-                      }
-                    }
-                    return null;
-                  }}
-                  onClickDay={(value) => {
-                    // Find participating events that match the clicked date
-                    const participatingEvents = eventsData1.filter((event) => {
-                      const eventDate = new Date(event.date);
-                      return (
-                        eventDate.getFullYear() === value.getFullYear() &&
-                        eventDate.getMonth() === value.getMonth() &&
-                        eventDate.getDate() === value.getDate()
-                      );
-                    });
-
-                    // Find created events that match the clicked date
-                    const createdEvents = eventsData3.filter((event) => {
-                      const eventDate = new Date(event.date);
-                      return (
-                        eventDate.getFullYear() === value.getFullYear() &&
-                        eventDate.getMonth() === value.getMonth() &&
-                        eventDate.getDate() === value.getDate()
-                      );
-                    });
-
-                    // Combine the event IDs from both participating and created events
-                    const eventIds = [
-                      ...participatingEvents,
-                      ...createdEvents,
-                    ].map((event) => event._id);
-
-                    // Set the state with the event IDs
-                    setSelectedDateEvents(eventIds);
-                  }}
-                />
-
-                <h3>Hello</h3>
-                <div className="event-ids">
-                  {selectedDateEvents.length > 0 ? (
-                    <ul>
-                      {selectedDateEvents.map((eventId) => (
-                        <li key={eventId}>{eventId}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No events for this date.</p>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-
+  const renderContent = () => {
+    switch (activeSection) {
+      case "create":
+        return <CreateEvent />;
+      case "participating":
+        return (
           <div>
             <h2>Participating Events</h2>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 justify-evenly">
               {eventsData1.length > 0 ? (
                 eventsData1.map((event) => (
                   <div
-                    className="m-5 w-[25vw] p-5 rounded cursor-pointer box"
+                    className="m-5 w-[20vw] p-5 rounded cursor-pointer box"
                     onClick={handleClick(event._id)}
                     key={event._id}
                   >
@@ -334,13 +248,16 @@ const Userboard = () => {
               )}
             </div>
           </div>
+        );
+      case "requests":
+        return (
           <div>
             <h2>Your Requests</h2>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 ">
               {eventsData2.length > 0 ? (
                 eventsData2.map((event) => (
                   <div
-                    className="box m-5 w-[25vw] p-5 rounded cursor-pointer"
+                    className="box m-5 w-[20vw] p-5 rounded cursor-pointer"
                     onClick={handleClick(event._id)}
                     key={event._id}
                   >
@@ -391,6 +308,9 @@ const Userboard = () => {
               )}
             </div>
           </div>
+        );
+      case "created":
+        return (
           <div>
             <div className="flex justify-between">
               <h2>Created Events</h2>
@@ -401,11 +321,11 @@ const Userboard = () => {
                 Requests {count > 0 && <span className="badge">{count}</span>}
               </button>
             </div>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 justify-evenly">
               {eventsData3.length > 0 ? (
                 eventsData3.map((eventItem) => (
                   <div
-                    className="box m-5 w-[25vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
+                    className="box m-5 w-[20vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
                     key={eventItem._id}
                     onClick={handleClick(eventItem._id)}
                   >
@@ -433,6 +353,55 @@ const Userboard = () => {
               )}
             </div>
           </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      {loading && (
+        <div className="loader-overlay">
+          <PropagateLoader
+            loading={loading}
+            speedMultiplier={1}
+            size={20}
+            aria-label="Loading Spinner"
+          />
+        </div>
+      )}
+      {userId ? (
+        <div className="userboard-container">
+          <div className="sidebar">
+            <ul>
+              <li
+                className={activeSection === "create" ? "active" : ""}
+                onClick={() => setActiveSection("create")}
+              >
+                Create Event
+              </li>
+              <li
+                className={activeSection === "participating" ? "active" : ""}
+                onClick={() => setActiveSection("participating")}
+              >
+                Participating Events
+              </li>
+              <li
+                className={activeSection === "created" ? "active" : ""}
+                onClick={() => setActiveSection("created")}
+              >
+                Created Events
+              </li>
+              <li
+                className={activeSection === "requests" ? "active" : ""}
+                onClick={() => setActiveSection("requests")}
+              >
+                YourRequests
+              </li>
+            </ul>
+          </div>
+          <div className="content">{renderContent()}</div>
           {showRequestsPopup && (
             <RequestDetailsPopup requests={Request} closePopup={closePopup} />
           )}
@@ -440,7 +409,7 @@ const Userboard = () => {
       ) : (
         <div className="flex justify-center h-[90vh]">
           <div className="flex justify-center items-center gap-10">
-            <img src={sad} className="h-[30vh]"></img>
+            <img src={sad} className="h-[30vh]" alt="sad" />
             <div>
               <h3 className="text-3xl">You are not logged in</h3>
               <p className="text-lg">
