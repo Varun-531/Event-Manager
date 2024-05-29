@@ -6,6 +6,7 @@ const User = require("./models/User");
 const Otp = require("./models/Otp");
 const Event = require("./models/Event");
 const Request = require("./models/Request");
+const Invite = require("./models/Invite");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const multer = require("multer");
@@ -41,6 +42,27 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+//middleware to verify token
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res.status(401).json({ message: "Access Denied" });
+  }
+  const token = authHeader.split(" ")[1]; // Extract the token from "Bearer <token>"
+  console.log("Token:", token);
+  if (!token) {
+    return res.status(401).json({ message: "Access Denied" });
+  }
+  try {
+    const decoded = jwt.verify(token, "secret");
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return res.status(400).json({ message: "Invalid token" });
+  }
+};
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -52,7 +74,7 @@ app.post("/login", async (req, res) => {
     if (!match) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    const token = jwt.sign({ id: user.id }, "secret", { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id }, "secret", { expiresIn: "3h" });
     return res.json({ success: true, token, userId: user.id });
   } catch (error) {
     console.error("Error during login:", error);
@@ -84,57 +106,62 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/add-event", upload.single("image"), async (req, res) => {
-  console.log("testing");
-  const {
-    title,
-    description,
-    location,
-    date,
-    time,
-    pincode,
-    endTime,
-    price,
-    size,
-    availability,
-    creator,
-    termsAndConditions,
-    category,
-  } = req.body;
-  const image = req.file ? req.file.path : null;
-  try {
-    let imageUrl = null;
-    if (image) {
-      console.log("Uploading Image");
-      const result = await cloudinary.uploader.upload(image);
-      console.log("Image Uploaded");
-      imageUrl = result.url;
-    }
-
-    const newEvent = new Event({
+app.post(
+  "/add-event",
+  verifyToken,
+  upload.single("image"),
+  async (req, res) => {
+    console.log("testing");
+    const {
       title,
       description,
       location,
       date,
       time,
-      endTime,
       pincode,
+      endTime,
+      price,
       size,
       availability,
       creator,
-      price,
       termsAndConditions,
-      image: imageUrl,
       category,
-    });
-    await newEvent.save();
-    console.log("Event created:", newEvent);
-    return res.json(newEvent);
-  } catch (error) {
-    console.error("Error during event creation:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    } = req.body;
+    const image = req.file ? req.file.path : null;
+    try {
+      let imageUrl = null;
+      if (image) {
+        console.log("Uploading Image");
+        const result = await cloudinary.uploader.upload(image);
+        console.log("Image Uploaded");
+        imageUrl = result.url;
+      }
+
+      const newEvent = new Event({
+        title,
+        description,
+        location,
+        date,
+        time,
+        endTime,
+        pincode,
+        size,
+        availability,
+        creator,
+        price,
+        termsAndConditions,
+        image: imageUrl,
+        category,
+      });
+      await newEvent.save();
+      console.log("Event created:", newEvent);
+      return res.json(newEvent);
+    } catch (error) {
+      console.error("Error during event creation:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
   }
-});
+);
 
 app.post("/email-verification", async (req, res) => {
   const { email } = req.body;
@@ -271,7 +298,7 @@ app.get("/fetch-event-createdby/:id", async (req, res) => {
   }
 });
 
-app.post("/book-event", async (req, res) => {
+app.post("/book-event", verifyToken, async (req, res) => {
   const { eventId, userId } = req.body;
   try {
     const event = await Event.findById(eventId);
@@ -350,7 +377,7 @@ app.post("/send-mail", async (req, res) => {
   }
 });
 
-app.post("/add-request", async (req, res) => {
+app.post("/add-request", verifyToken, async (req, res) => {
   const { eventId, to, from } = req.body;
   try {
     const newRequest = new Request({
@@ -435,7 +462,17 @@ app.get("/fetch-from-request/:id", async (req, res) => {
   }
 });
 
-app.post("/decline-request", async (req, res) => {
+app.get("/fetch-users", async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/decline-request", verifyToken, async (req, res) => {
   const { requestId } = req.body;
   try {
     //send email to user about the request being declined
@@ -472,7 +509,49 @@ app.post("/decline-request", async (req, res) => {
   }
 });
 
-app.post("/accept-request", async (req, res) => {
+app.post("/add-invite", verifyToken, async (req, res) => {
+  const { eventId, to, from } = req.body;
+  try {
+    const newInvite = new Invite({
+      eventId,
+      to,
+      from,
+    });
+    await newInvite.save();
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    if (event.invites.includes(to)) {
+      return res.status(400).json({ message: "Invite already sent" });
+    }
+    event.invites.push(from);
+
+    const user = await User.findById(to);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    await event.save();
+    //send email
+    try {
+      const mailOptions = {
+        from: process.env.REACT_APP_EMAIL,
+        to: user.email,
+        subject: "Event Invite",
+        text: `Hi ${user.username}, you have been invited to the event ${event.title}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  } catch (error) {
+    console.error("Error adding invite:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/accept-request", verifyToken, async (req, res) => {
   const { requestId } = req.body;
   try {
     const request = await Request.findById(requestId);

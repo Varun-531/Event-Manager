@@ -100,25 +100,14 @@ const Header = () => {
         <ul className="flex justify-center gap-7">
           {isAuthenticated ? (
             <>
-              <li>
-                <button
-                  onClick={() => navigate("/create-event")}
-                  className={
-                    isActive("/create-event")
-                      ? "text-slate-500 font-semibold"
-                      : ""
-                  }
-                >
-                  Create Event
-                </button>
-              </li>
+              <li></li>
               <li
                 className={`cursor-pointer ${
                   isActive("/dashboard") ? "text-slate-500 font-semibold" : ""
                 }`}
                 onClick={() => navigate("/dashboard")}
               >
-                Dashboard
+                All Events
               </li>
               <li
                 // className="headerLink cursor-pointer"
@@ -127,7 +116,7 @@ const Header = () => {
                 }`}
                 onClick={() => navigate("/userboard")}
               >
-                UserBoard
+                Dashboard
               </li>
               <li>
                 <button onClick={handleLogout}>Logout</button>

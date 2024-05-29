@@ -152,11 +152,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import { toast } from "react-hot-toast";
+import { useCookies } from "react-cookie";
 import wave from "./wave.svg";
 import "./RequestDetailsPopup.css";
 
 const RequestDetailsPopup = ({ requests, closePopup }) => {
   const [senderData, setSenderData] = useState({});
+  const [cookies] = useCookies(["token"]);
   const [eventData, setEventData] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -200,8 +202,18 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
   const handleAccept = async (requestId) => {
     setLoading(true);
     try {
-      await axios.post(`http://localhost:4000/accept-request`, { requestId });
+      await axios.post(
+        `http://localhost:4000/accept-request`,
+        { requestId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      );
       toast.success("Request accepted successfully");
+      window.location.reload();
       setLoading(false);
     } catch (error) {
       console.error("Error accepting request:", error);
@@ -213,8 +225,18 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
   const handleDecline = async (requestId) => {
     setLoading(true);
     try {
-      await axios.post(`http://localhost:4000/decline-request`, { requestId });
+      await axios.post(
+        `http://localhost:4000/decline-request`,
+        { requestId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      );
       setLoading(false);
+      window.location.reload();
       toast.success("Request declined successfully");
     } catch (error) {
       console.error("Error declining request:", error);
@@ -242,61 +264,62 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
           </button>
           <h2 className="">Requests</h2>
           <div className="popup-inner-content">
-            {requests.map((request) => (
-              <div
-                key={request._id}
-                className="flex justify-between items-center gap-5 mt-5"
-              >
-                <div>
-                  <div className="flex items-center gap-1">
-                    <i class="fi fi-rr-user user"></i>
-                    <p>{senderData[request.from]?.username}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <i class="fi fi-rr-at user2"></i>
-                    <p>{senderData[request.from]?.email}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <i class="fi fi-rr-calendar-day user"></i>
-                    <p>
-                      {/* Event Name:  */}
-                      {eventData[request.eventId]?.title}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  {request.status === "Pending" ? (
-                    <div className="flex gap-1">
-                      <button
-                        className="button-popup bg-green-700 text-slate-100 text-sm px-2 rounded"
-                        onClick={() => handleAccept(request._id)}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="button-popup bg-red-700 text-slate-100 text-sm p-1 rounded"
-                        onClick={() => handleDecline(request._id)}
-                      >
-                        Decline
-                      </button>
+            {requests.length === 0 ? (
+              <h3 className="text-center">No requests</h3>
+            ) : (
+              requests.map((request) => (
+                <div
+                  key={request._id}
+                  className="flex justify-between items-center gap-5 mt-5"
+                >
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <i class="fi fi-rr-user user"></i>
+                      <p>{senderData[request.from]?.username}</p>
                     </div>
-                  ) : (
-                    <p>
-                      Status:{" "}
-                      <span
-                        className={
-                          request.status === "Accepted"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }
-                      >
-                        {request.status}
-                      </span>
-                    </p>
-                  )}
+                    <div className="flex gap-1">
+                      <i class="fi fi-rr-at user2"></i>
+                      <p>{senderData[request.from]?.email}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <i class="fi fi-rr-calendar-day user"></i>
+                      <p>{eventData[request.eventId]?.title}</p>
+                    </div>
+                  </div>
+                  <div>
+                    {request.status === "Pending" ? (
+                      <div className="flex gap-1">
+                        <button
+                          className="button-popup bg-green-700 text-slate-100 text-sm px-2 rounded"
+                          onClick={() => handleAccept(request._id)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="button-popup bg-red-700 text-slate-100 text-sm p-1 rounded"
+                          onClick={() => handleDecline(request._id)}
+                        >
+                          Decline
+                        </button>
+                      </div>
+                    ) : (
+                      <p>
+                        Status:{" "}
+                        <span
+                          className={
+                            request.status === "Accepted"
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }
+                        >
+                          {request.status}
+                        </span>
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

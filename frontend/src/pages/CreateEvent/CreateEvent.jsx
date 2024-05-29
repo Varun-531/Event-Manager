@@ -41,7 +41,7 @@ const CreateEvent = () => {
       toast.error("Please Login First");
       return;
     }
-    // toast.success("Event Creating");
+
     setLoading(true);
     e.preventDefault();
     const formData = new FormData();
@@ -67,6 +67,7 @@ const CreateEvent = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${cookies.token}`, // Correctly format the Authorization header
           },
         }
       );
@@ -75,13 +76,13 @@ const CreateEvent = () => {
       toast.success("Event Created");
       navigate("/");
       setLoading(false);
-      // Optionally, redirect the user to another page after successful form submission
     } catch (error) {
       setLoading(false);
       toast.error("Error creating event", error.message);
       console.error("Error creating event:", error);
     }
   };
+
   const handlePublicCheckboxClick = () => {
     setPublicEvent(true);
     setPrivateEvent(false);

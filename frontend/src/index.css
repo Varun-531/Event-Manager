@@ -30,6 +30,15 @@ i {
   font-size: 1.3rem;
   color: #767b91;
 }
+/* .profile {
+  font-size: 1.3rem;
+  color: #ffffff !important;
+  border: 2px solid #ffffff;
+  height: 10px;
+  width: 10px;
+  margin: ;
+  border-radius: 50%;
+} */
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

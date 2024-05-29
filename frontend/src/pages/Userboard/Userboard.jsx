@@ -226,11 +226,17 @@ const Userboard = () => {
             view === "month" && isEventDate(date) ? "event-date" : null
           }
         /> */}
-          <button
+          {/* <button
             className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800 float-right"
             onClick={handleCalender}
           >
             Calendar
+          </button> */}
+          <button
+            onClick={() => navigate("/create-event")}
+            className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800 float-right"
+          >
+            Create Event
           </button>
           {showCalender && (
             <>

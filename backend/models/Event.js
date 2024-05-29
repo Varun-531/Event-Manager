@@ -74,6 +74,9 @@ const eventSchema = new mongoose.Schema(
     requestsId: {
       type: [String],
     },
+    invites: {
+      type: [String],
+    },
   },
   {
     timestamps: true,
