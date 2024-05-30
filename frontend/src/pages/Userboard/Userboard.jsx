@@ -225,6 +225,13 @@ const Userboard = () => {
                     className="m-5 w-[20vw] p-5 rounded cursor-pointer box"
                     onClick={handleClick(event._id)}
                     key={event._id}
+                    //add background image with event image
+                    // style={{
+                    //   backgroundImage: `url(${event.image})`,
+                    //   backgroundSize: "cover",
+                    //   backgroundPosition: "center",
+                    //   opacity: "0.6", //only the background image
+                    // }}
                   >
                     <h3>{event.title}</h3>
                     <div className="flex items-center gap-1 my-2">

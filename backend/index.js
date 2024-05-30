@@ -444,6 +444,8 @@ app.get("/fetch-requests/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const requests = await Request.find({ to: id });
+    //reverse
+    requests.reverse();
     return res.json(requests);
   } catch (error) {
     console.error("Error fetching requests:", error);

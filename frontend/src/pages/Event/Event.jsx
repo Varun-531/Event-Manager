@@ -350,12 +350,12 @@ const Event = () => {
                   </div>
                 )}
               </div>
-              <button
+              {/* <button
                 onClick={handleUsers}
                 className="bg-slate-800 px-2 py-1 mt-3 text-slate-200 rounded"
               >
                 Invite
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="mt-3">

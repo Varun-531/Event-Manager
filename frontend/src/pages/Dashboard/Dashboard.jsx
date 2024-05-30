@@ -846,8 +846,9 @@ const Dashboard = () => {
                       alt={event.name}
                       className="event-image rounded"
                     />
-                    <div className="location-container">
+                    <div className="location-container flex flex-col justify-center items-center">
                       <h3>{event.title}</h3>
+                      <h4>{event.availability}</h4>
                     </div>
                     <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
                       {formatDate(event.date)}
@@ -880,8 +881,9 @@ const Dashboard = () => {
                       alt={event.name}
                       className="event-image rounded"
                     />
-                    <div className="location-container">
+                    <div className="location-container flex flex-col justify-center items-center">
                       <h3>{event.title}</h3>
+                      <h4>{event.availability}</h4>
                     </div>
                     <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
                       {formatDate(event.date)}
@@ -913,8 +915,9 @@ const Dashboard = () => {
                       alt={event.name}
                       className="event-image rounded"
                     />
-                    <div className="location-container">
+                    <div className="location-container flex flex-col justify-center items-center">
                       <h3>{event.title}</h3>
+                      <h4>{event.availability}</h4>
                     </div>
                     <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
                       {formatDate(event.date)}
@@ -944,8 +947,9 @@ const Dashboard = () => {
                       alt={event.name}
                       className="event-image rounded"
                     />
-                    <div className="location-container">
+                    <div className="location-container flex flex-col justify-center items-center">
                       <h3>{event.title}</h3>
+                      <h4>{event.availability}</h4>
                     </div>
                     <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
                       {formatDate(event.date)}
@@ -975,8 +979,9 @@ const Dashboard = () => {
                       alt={event.name}
                       className="event-image rounded"
                     />
-                    <div className="location-container">
+                    <div className="location-container flex flex-col justify-center items-center">
                       <h3>{event.title}</h3>
+                      <h4>{event.availability}</h4>
                     </div>
                     <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
                       {formatDate(event.date)}
@@ -1005,8 +1010,9 @@ const Dashboard = () => {
                       alt={event.name}
                       className="event-image rounded"
                     />
-                    <div className="location-container">
+                    <div className="location-container flex flex-col justify-center items-center">
                       <h3>{event.title}</h3>
+                      <h4>{event.availability}</h4>
                     </div>
                     <h3 className="absolute bg-slate-200 p-1 rounded right-4 top-4 text-sm">
                       {formatDate(event.date)}

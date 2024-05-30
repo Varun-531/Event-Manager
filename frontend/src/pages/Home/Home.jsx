@@ -89,7 +89,7 @@ const Home = () => {
       </div>
       <section className="bg-slate-300 px-10 pb-10" id="about">
         {/* <h1 className="p-5 text-slate-800 text-3xl text-center pt-10">About</h1> */}
-        <div className="flex justify-center items-center px-[15vw] pt-20 pb-10">
+        <div className="flex justify-center items-center px-[10vw] pt-20 pb-10">
           <img src={events} className="h-[50vh]" />
           <div className="flex flex-col h-[50vh] gap-3">
             <h3 className="text-6xl pt-10 text-slate-800">
