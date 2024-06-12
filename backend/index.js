@@ -26,17 +26,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(
-  // process.env.REACT_APP_MONGO_DB_URL +
-  "mongodb+srv://21pa1a0531:JU5kGfUf5niBZreG@eventscluster.aoyo1zs.mongodb.net/EventManager",
-  {}
-);
+mongoose
+  .connect(
+    "mongodb+srv://21pa1a0531:JU5kGfUf5niBZreG@eventscluster.aoyo1zs.mongodb.net/EventManager"
+    // "mongodb+srv://emcommerce-admin:123456780@cluster0.z8jcujg.mongodb.net/EventManager"
+  )
+  .then(() => console.log(`${mongoose.connection.name}`))
+  .catch((err) => console.log(err));
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-db.once("open", () => {
-  console.log("MongoDB connected successfully");
-});
+// const db = mongoose.connection;
+// db.on("error", console.error.bind(console, "MongoDB connection error:"));
+// db.once("open", () => {
+//   console.log("MongoDB connected successfully");
+// });
 
 const transporter = nodemailer.createTransport({
   service: "hotmail",
