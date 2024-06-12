@@ -11,9 +11,7 @@ function App() {
 
   return (
     <>
-      {/* {location.pathname !== '/' && location.pathname !== '/login' &&  */}
       <Header />
-      {/* } */}
       <Outlet />
     </>
   );
