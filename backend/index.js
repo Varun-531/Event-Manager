@@ -26,7 +26,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://127.0.0.1:27017/EventManager", {});
+mongoose.connect(process.env.MONGO_DB_URL + "/EventManager", {});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
