@@ -26,7 +26,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.REACT_APP_MONGO_DB_URL + "/EventManager", {});
+mongoose.connect(
+  process.env.REACT_APP_MONGO_DB_URL +
+    "/EventManager?retryWrites=true&w=majority&ssl=true",
+  {}
+);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
