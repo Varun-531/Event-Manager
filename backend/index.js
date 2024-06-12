@@ -27,8 +27,8 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  process.env.REACT_APP_MONGO_DB_URL +
-    "/EventManager?retryWrites=true&w=majority&ssl=true",
+  // process.env.REACT_APP_MONGO_DB_URL +
+  "mongodb+srv://21pa1a0531:JU5kGfUf5niBZreG@eventscluster.aoyo1zs.mongodb.net/EventManager",
   {}
 );
 
