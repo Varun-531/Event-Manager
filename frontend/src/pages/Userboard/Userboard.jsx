@@ -36,7 +36,7 @@ const Userboard = () => {
   useEffect(() => {
     // Fetch user data
     axios
-      .get(`http://localhost:4000/fetch-user/${userId}`)
+      .get(`https://event-manager-ghso.onrender.com/fetch-user/${userId}`)
       .then((res) => {
         setUser(res.data);
         setParticipatingEvents(res.data.events);
@@ -47,7 +47,9 @@ const Userboard = () => {
 
     // Fetch requests sent from the user
     axios
-      .get(`http://localhost:4000/fetch-from-request/${userId}`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-from-request/${userId}`
+      )
       .then((res) => {
         setFrom(res.data);
       })
@@ -62,7 +64,9 @@ const Userboard = () => {
       setLoading(true);
       try {
         const eventPromises = participatingEvents.map((eventId) =>
-          axios.get(`http://localhost:4000/fetch-event/${eventId}`)
+          axios.get(
+            `https://event-manager-ghso.onrender.com/fetch-event/${eventId}`
+          )
         );
         const eventResponses = await Promise.all(eventPromises);
         const eventsData = eventResponses.map((res) => res.data);
@@ -85,7 +89,9 @@ const Userboard = () => {
     const fetchEventData = async () => {
       try {
         const eventPromises = eventIds.map((eventId) =>
-          axios.get(`http://localhost:4000/fetch-event/${eventId}`)
+          axios.get(
+            `https://event-manager-ghso.onrender.com/fetch-event/${eventId}`
+          )
         );
         const eventResponses = await Promise.all(eventPromises);
         const eventsData = eventResponses.map((res) => res.data);
@@ -107,7 +113,9 @@ const Userboard = () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         const eventPromises = eventIds.map((eventId) =>
-          axios.get(`http://localhost:4000/fetch-event/${eventId}`)
+          axios.get(
+            `https://event-manager-ghso.onrender.com/fetch-event/${eventId}`
+          )
         );
         const eventResponses = await Promise.all(eventPromises);
         const eventsData = eventResponses.map((res) => res.data);
@@ -123,7 +131,9 @@ const Userboard = () => {
   useEffect(() => {
     // Fetch events created by the user
     axios
-      .get(`http://localhost:4000/fetch-event-createdby/${userId}`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-event-createdby/${userId}`
+      )
       .then((res) => {
         setEventsData3(res.data);
       })
@@ -134,7 +144,7 @@ const Userboard = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/fetch-requests/${userId}`)
+      .get(`https://event-manager-ghso.onrender.com/fetch-requests/${userId}`)
       .then((res) => {
         setRequest(res.data);
         setCount(
@@ -151,7 +161,9 @@ const Userboard = () => {
   };
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/fetch-event-createdby/${userId}`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-event-createdby/${userId}`
+      )
       .then((res) => {
         setEventsData3(res.data);
         setCreatedEventDates(res.data.map((event) => new Date(event.date)));

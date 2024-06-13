@@ -169,7 +169,7 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
         const senderDataMap = {};
         for (const senderId of senderIds) {
           const response = await axios.get(
-            `http://localhost:4000/fetch-user/${senderId}`
+            `https://event-manager-ghso.onrender.com/fetch-user/${senderId}`
           );
           senderDataMap[senderId] = response.data;
         }
@@ -185,7 +185,7 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
         const eventDataMap = {};
         for (const eventId of eventIds) {
           const response = await axios.get(
-            `http://localhost:4000/fetch-event/${eventId}`
+            `https://event-manager-ghso.onrender.com/fetch-event/${eventId}`
           );
           eventDataMap[eventId] = response.data;
         }
@@ -203,7 +203,7 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
     setLoading(true);
     try {
       await axios.post(
-        `http://localhost:4000/accept-request`,
+        `https://event-manager-ghso.onrender.com/accept-request`,
         { requestId },
         {
           headers: {
@@ -226,7 +226,7 @@ const RequestDetailsPopup = ({ requests, closePopup }) => {
     setLoading(true);
     try {
       await axios.post(
-        `http://localhost:4000/decline-request`,
+        `https://event-manager-ghso.onrender.com/decline-request`,
         { requestId },
         {
           headers: {

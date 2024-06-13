@@ -62,7 +62,7 @@ const CreateEvent = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/add-event",
+        "https://event-manager-ghso.onrender.com/add-event",
         formData,
         {
           headers: {

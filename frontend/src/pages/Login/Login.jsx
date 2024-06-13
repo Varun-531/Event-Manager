@@ -34,7 +34,10 @@ const Login = () => {
   const handleLogin = (event) => {
     event.preventDefault();
     axios
-      .post("http://localhost:4000/login", { email, password })
+      .post("https://event-manager-ghso.onrender.com/login", {
+        email,
+        password,
+      })
       .then((res) => {
         console.log(res.data);
         toast.success("Logged in successfully");
@@ -64,7 +67,10 @@ const Login = () => {
     setLoading(true);
     console.log(otp);
     axios
-      .post("http://localhost:4000/otp-verification", { email, otp })
+      .post("https://event-manager-ghso.onrender.com/otp-verification", {
+        email,
+        otp,
+      })
       .then((res) => {
         console.log(res.data);
         setLoading(false);
@@ -85,7 +91,9 @@ const Login = () => {
     setLoading(true);
     console.log(email);
     axios
-      .post("http://localhost:4000/email-verification", { email })
+      .post("https://event-manager-ghso.onrender.com/email-verification", {
+        email,
+      })
       .then((res) => {
         console.log(res.data);
         setLoading(false);
@@ -108,7 +116,11 @@ const Login = () => {
       return;
     }
     axios
-      .post("http://localhost:4000/register", { email, password, username })
+      .post("https://event-manager-ghso.onrender.com/register", {
+        email,
+        password,
+        username,
+      })
       .then((res) => {
         console.log(res.data);
         toast.success("Registered successfully");
@@ -133,7 +145,9 @@ const Login = () => {
     setLoading(true);
     console.log(email);
     axios
-      .post("http://localhost:4000/email-verification", { email })
+      .post("https://event-manager-ghso.onrender.com/email-verification", {
+        email,
+      })
       .then((res) => {
         console.log(res.data);
         setLoading(false);
@@ -154,7 +168,10 @@ const Login = () => {
     event.preventDefault();
     setLoading(true);
     axios
-      .post("http://localhost:4000/otp-verification", { email, otp: otp2 })
+      .post("https://event-manager-ghso.onrender.com/otp-verification", {
+        email,
+        otp: otp2,
+      })
       .then((res) => {
         console.log(res.data);
         setLoading(false);
@@ -178,7 +195,10 @@ const Login = () => {
       return;
     }
     axios
-      .post("http://localhost:4000/change-password", { email, password })
+      .post("https://event-manager-ghso.onrender.com/change-password", {
+        email,
+        password,
+      })
       .then((res) => {
         console.log(res.data);
         toast.success("Password changed successfully");

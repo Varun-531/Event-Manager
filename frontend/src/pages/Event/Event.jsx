@@ -47,7 +47,7 @@ const Event = () => {
         const details = await Promise.all(
           event.attendees.map(async (attendeeId) => {
             const response = await axios.get(
-              `http://localhost:4000/fetch-user/${attendeeId}`
+              `https://event-manager-ghso.onrender.com/fetch-user/${attendeeId}`
             );
             return {
               username: response.data.username,
@@ -68,7 +68,7 @@ const Event = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/fetch-event/${id}`)
+      .get(`https://event-manager-ghso.onrender.com/fetch-event/${id}`)
       .then((res) => {
         setEvent(res.data);
       })
@@ -80,7 +80,9 @@ const Event = () => {
   useEffect(() => {
     if (event.creator) {
       axios
-        .get(`http://localhost:4000/fetch-user/${event.creator}`)
+        .get(
+          `https://event-manager-ghso.onrender.com/fetch-user/${event.creator}`
+        )
         .then((res) => {
           setCreator(res.data);
         })
@@ -122,7 +124,7 @@ const Event = () => {
         const usernames = await Promise.all(
           event.attendees.map(async (attendeeId) => {
             const response = await axios.get(
-              `http://localhost:4000/fetch-user/${attendeeId}`
+              `https://event-manager-ghso.onrender.com/fetch-user/${attendeeId}`
             );
             return response.data.username;
           })
@@ -172,7 +174,7 @@ const Event = () => {
 
   const handleUsers = () => {
     axios
-      .get(`http://localhost:4000/fetch-users`)
+      .get(`https://event-manager-ghso.onrender.com/fetch-users`)
       .then((res) => {
         setUserPopup(true);
         setUsersList(res.data);
@@ -191,7 +193,7 @@ const Event = () => {
       if (event.availability === "Public") {
         axios
           .post(
-            `http://localhost:4000/book-event`,
+            `https://event-manager-ghso.onrender.com/book-event`,
             {
               eventId: id,
               userId: userId,
@@ -221,7 +223,7 @@ const Event = () => {
       } else {
         axios
           .post(
-            `http://localhost:4000/add-request`,
+            `https://event-manager-ghso.onrender.com/add-request`,
             {
               eventId: id,
               to: event.creator,

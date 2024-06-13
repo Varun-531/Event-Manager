@@ -545,7 +545,7 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/fetch-events")
+      .get("https://event-manager-ghso.onrender.com/fetch-events")
       .then((response) => {
         setLoading(false);
         setEventList(response.data);
@@ -560,7 +560,7 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/fetch-events-reverse")
+      .get("https://event-manager-ghso.onrender.com/fetch-events-reverse")
       .then((response) => {
         setLoading(false);
         setReverseList(response.data);
@@ -575,7 +575,9 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:4000/fetch-events-by-category/Sports`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-events-by-category/Sports`
+      )
       .then((response) => {
         setLoading(false);
         setSportsList(response.data);
@@ -589,7 +591,9 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:4000/fetch-events-by-category/Entertainment`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-events-by-category/Entertainment`
+      )
       .then((response) => {
         setLoading(false);
         setEntertainmentList(response.data);
@@ -603,7 +607,9 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:4000/fetch-events-by-category/Technology`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-events-by-category/Technology`
+      )
       .then((response) => {
         setLoading(false);
         setTechnologyList(response.data);
@@ -617,7 +623,9 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:4000/fetch-events-by-category/Music`)
+      .get(
+        `https://event-manager-ghso.onrender.com/fetch-events-by-category/Music`
+      )
       .then((response) => {
         setLoading(false);
         setMusicList(response.data);

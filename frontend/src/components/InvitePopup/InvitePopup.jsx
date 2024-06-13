@@ -16,7 +16,7 @@ const InvitePopup = ({ users, creator, eventId, onClose }) => {
       //   setLoading(true);
       axios
         .post(
-          `http://localhost:4000/add-invite`,
+          `https://event-manager-ghso.onrender.com/add-invite`,
           { eventId, to: userId, from: creator },
           {
             headers: {
