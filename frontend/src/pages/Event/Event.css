@@ -36,3 +36,20 @@ body {
 .booked {
   border: 2px solid #db2777;
 }
+@media only screen and (max-width: 600px) {
+  .image-container {
+    padding: 20px;
+    width: 100vw;
+  }
+  .image {
+    width: 100vw;
+    height: auto;
+  }
+  .details {
+    width: 90vw;
+  }
+  .svg {
+    width: 20vw;
+    padding: 0;
+  }
+}

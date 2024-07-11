@@ -226,12 +226,12 @@ const Login = () => {
         </div>
       )}
       <div className="login-background h-full flex justify-center">
-        <div className="login-container flex gap-7 justify-center items-center bg-orange-100 rounded p-14">
-          <img src={LoginSvg} alt="svg" className="h-[60vh]" />
+        <div className="login-container md:flex gap-7 justify-center items-center bg-orange-100 rounded md:p-14">
+          <img src={LoginSvg} alt="svg" className="hidden md:block h-[60vh]" />
           {login2 ? (
-            <div className="temp flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="temp flex min-h-full flex-col justify-center md:px-6 md:py-12 lg:px-8">
               <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                <h2 className="md:mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                   Sign in to your account
                 </h2>
               </div>
@@ -452,7 +452,7 @@ const Login = () => {
               </div>
             </div>
           ) : (
-            <div className="temp flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="temp flex min-h-full flex-col justify-center md:px-6 md:py-12 lg:px-8">
               <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                   Sign up to your account

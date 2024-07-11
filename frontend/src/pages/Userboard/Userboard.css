@@ -259,3 +259,11 @@ abbr,
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
 }
+@media only screen and (max-width: 600px) {
+  .userboard-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    height: fit-content;
+  }
+}

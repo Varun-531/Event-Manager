@@ -282,15 +282,15 @@ const Event = () => {
             tweenDuration={1000}
           />
         )}
-        <div className="m-10 mx-20">
-          <div className="flex gap-3">
+        <div className="md:m-10 md:mx-20">
+          <div className="md:flex gap-3">
             <div className="image-container">
               <img src={event.image} className="image" alt="Event" />
             </div>
-            <div className="">
+            <div className="flex items-center justify-center flex-col">
               <div className="details flex items-center justify-between ">
                 <div className="flex flex-col gap-2">
-                  <h2 className="font-semibold absolute truncate w-[28vw]">
+                  <h2 className="font-semibold absolute truncate md:w-[28vw]">
                     {event.title}
                   </h2>
                   <div className="flex gap-4 items-center pt-10">
@@ -360,18 +360,18 @@ const Event = () => {
               </button> */}
             </div>
           </div>
-          <div className="mt-3">
+          <div className="mt-3 m-5 md:m-0">
             <h3 className="font-semibold underline underline-offset-4">
               About
             </h3>
-            <p>{event.description}</p>
+            <p className="text-justify">{event.description}</p>
             <p className="mt-3">
               {event.time} - {event.endTime}
             </p>
             <p>{event.location}</p>
             <p className="mb-3">{event.pincode}</p>
           </div>
-          <div>
+          <div className="md:m-0 m-5">
             <h3 className="font-semibold underline underline-offset-4">
               Terms and Conditions
             </h3>

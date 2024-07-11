@@ -23,7 +23,7 @@ select {
 }
 .temp-1 {
   justify-content: space-between;
-  margin: 0 10px 0 10px;
+  /* margin: 0 10px 0 10px; */
 }
 #category {
   /* width: 10vw;
@@ -61,4 +61,15 @@ select:focus {
 #pincode {
   width: 10vw;
   /* padding: 10px; */
+}
+@media only screen and (max-width: 600px) {
+  #size,
+  #category,
+  #time,
+  #price,
+  #pincode,
+  #endtime,
+  #date {
+    width: 35vw;
+  }
 }

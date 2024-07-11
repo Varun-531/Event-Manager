@@ -91,13 +91,18 @@ const Header = () => {
   return (
     <div className="flex justify-between bg-slate-900 p-3 items-center">
       <div className=" flex items-center">
-        <img src={logo} alt="logo" className="w-14" />
-        <Link className="text-slate-200 font-semibold text-xl" to="/">
+        <Link to="/">
+          <img src={logo} alt="logo" className="w-14" />
+        </Link>
+        <Link
+          className="hidden md:block text-slate-200 font-semibold text-xl"
+          to="/"
+        >
           Event Manager
         </Link>
       </div>
       <nav className="text-slate-200">
-        <ul className="flex justify-center gap-7">
+        <ul className="flex justify-center md:gap-7 gap-5">
           {isAuthenticated ? (
             <>
               <li></li>

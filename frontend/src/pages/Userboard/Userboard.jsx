@@ -234,7 +234,7 @@ const Userboard = () => {
               {eventsData1.length > 0 ? (
                 eventsData1.map((event) => (
                   <div
-                    className="m-5 w-[20vw] p-5 rounded cursor-pointer box"
+                    className="m-5 md:w-[20vw] w-[100vw] p-5 rounded cursor-pointer box"
                     onClick={handleClick(event._id)}
                     key={event._id}
                     //add background image with event image
@@ -276,7 +276,7 @@ const Userboard = () => {
               {eventsData2.length > 0 ? (
                 eventsData2.map((event) => (
                   <div
-                    className="box m-5 w-[20vw] p-5 rounded cursor-pointer"
+                    className="box m-5 md:w-[20vw] w-[100vw] p-5 rounded cursor-pointer"
                     onClick={handleClick(event._id)}
                     key={event._id}
                   >
@@ -344,7 +344,7 @@ const Userboard = () => {
               {eventsData3.length > 0 ? (
                 eventsData3.map((eventItem) => (
                   <div
-                    className="box m-5 w-[20vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
+                    className="box m-5 md:w-[20vw] w-[100vw] p-5 rounded cursor-pointer flex gap-2 justify-between"
                     key={eventItem._id}
                     onClick={handleClick(eventItem._id)}
                   >

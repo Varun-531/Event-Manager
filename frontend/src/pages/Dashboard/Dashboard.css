@@ -22,7 +22,9 @@
   width: 30vw;
   height: 30vh;
   box-shadow: 100px 50rem 10rem rgba(0, 0, 0, 0.1);
-  transition: filter 0.5s ease; /* Apply transition effect to filter property */
+  transition: filter 0.5s ease;
+  object-fit: cover;
+  /* Apply transition effect to filter property */
 }
 
 .event-image1 {
@@ -120,4 +122,35 @@ article {
 .slick-track {
   margin-top: 10px;
   /* border-radius: 100px; */
+}
+@media only screen and (max-width: 600px) {
+  .event-image1 {
+    height: auto;
+    width: 90vw;
+    filter: brightness(90%);
+  }
+  .event-slider1 {
+    height: fit-content;
+  }
+  .slick-dots {
+    bottom: -20px !important;
+  }
+  .event-slide {
+    padding: 0;
+
+    /* width: 20vw; */
+  }
+  .event-image {
+    width: auto;
+    /* height: 25vh; */
+  }
+  .previousArrow {
+    margin-left: 20px;
+  }
+  .event-article {
+    margin-left: 11vw;
+  }
+  .custom-prev-arrow {
+    margin-left: 10vw;
+  }
 }

@@ -107,11 +107,11 @@ const CreateEvent = () => {
       )}
       <div className="p-1 ">
         <div className="bg-rose-100   rounded">
-          <div className="flex justify-center">
-            <div className="w-1/2 p-10">
+          <div className="md:flex justify-center">
+            <div className="md:w-1/2 md:p-10">
               <form
                 onSubmit={handleSubmit}
-                className="flex flex-col w-4/4 ml-10 gap-y-2"
+                className="flex flex-col w-4/4 md:ml-10 md:p-0 p-5 gap-y-2"
               >
                 <h1 className="text-xl font-medium">Add Event</h1>
                 <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -146,19 +146,25 @@ const CreateEvent = () => {
                   rows="05"
                 ></textarea>
                 <div className="flex temp-1">
-                  <div>
+                  <div className="w-1/2">
                     <label className="block text-sm font-medium leading-6 text-gray-900">
                       Availability
                     </label>
                     <select
                       value={availability}
                       id="availability"
-                      className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                      className="block md:pr-2 md:w-full w-[35vw] rounded-md border-0 md:py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                       onChange={(e) => setAvailability(e.target.value)}
                     >
-                      <option value="">Availability</option>
-                      <option value="Public">Public</option>
-                      <option value="Private">Private</option>
+                      <option className="md:text-sm text-xs" value="">
+                        Availability
+                      </option>
+                      <option className="md:text-sm text-xs" value="Public">
+                        Public
+                      </option>
+                      <option className="md:text-sm text-xs" value="Private">
+                        Private
+                      </option>
                     </select>
                   </div>
                   <div>
@@ -170,7 +176,7 @@ const CreateEvent = () => {
                       type="date"
                       value={date}
                       id="date"
-                      className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                      className="block md:pr-2 md:w-full w-[35vw] rounded-md border-0 md:py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                       onChange={(e) => setDate(e.target.value)}
                     />
                   </div>
@@ -193,7 +199,7 @@ const CreateEvent = () => {
                     <input
                       type="time"
                       id="time"
-                      className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                      className="block pr-2 md:w-full w-[35vw] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                       value={time}
                       onChange={(e) => setTime(e.target.value)}
                     />
@@ -221,7 +227,7 @@ const CreateEvent = () => {
                       id="size"
                       min={1}
                       // max={12}
-                      className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                      className="block pr-2 md:w-full w-[35vw] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                       value={size}
                       onChange={(e) => setSize(e.target.value)}
                     />
@@ -234,7 +240,7 @@ const CreateEvent = () => {
                     <select
                       value={category}
                       id="category"
-                      className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                      className="block pr-2 md:w-full w-[35vw] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                       onChange={(e) => setCategory(e.target.value)}
                     >
                       <option value="">Category</option>
@@ -261,7 +267,7 @@ const CreateEvent = () => {
                       type="number"
                       id="price"
                       min={0}
-                      className="block pr-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
+                      className="block pr-2 md:w-full w-[35vw] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 sm:text-sm sm:leading-6"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />
@@ -301,7 +307,7 @@ const CreateEvent = () => {
               </form>
             </div>
             <div
-              className="div-img rounded-r"
+              className="hidden md:block div-img rounded-r"
               onClick={() => {
                 handleLogin();
               }}
