@@ -33,12 +33,14 @@ const Login = () => {
   const { login } = useContext(AuthContext);
   const handleLogin = (event) => {
     event.preventDefault();
+    setLoading(true);
     axios
       .post("https://event-manager-ghso.onrender.com/login", {
         email,
         password,
       })
       .then((res) => {
+        setLoading(false);
         console.log(res.data);
         toast.success("Logged in successfully");
         setCookie(
@@ -57,6 +59,7 @@ const Login = () => {
         login();
       })
       .catch((err) => {
+        setLoading(false);
         console.error(err);
         toast.error("Invalid email or password");
       });
@@ -115,6 +118,7 @@ const Login = () => {
       toast.error("Passwords do not match");
       return;
     }
+    setLoading(true);
     axios
       .post("https://event-manager-ghso.onrender.com/register", {
         email,
@@ -122,12 +126,14 @@ const Login = () => {
         username,
       })
       .then((res) => {
+        setLoading(false);
         console.log(res.data);
         toast.success("Registered successfully");
         setLogin(true);
         setPassword("");
       })
       .catch((err) => {
+        setLoading(false);
         console.error(err);
         toast.error("Email already exists");
       });
@@ -190,16 +196,19 @@ const Login = () => {
 
   const handleChangePass = (event) => {
     event.preventDefault();
+
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
+    setLoading(true);
     axios
       .post("https://event-manager-ghso.onrender.com/change-password", {
         email,
         password,
       })
       .then((res) => {
+        setLoading(false);
         console.log(res.data);
         toast.success("Password changed successfully");
         // setLogin(true);
@@ -208,6 +217,7 @@ const Login = () => {
         setFifth(false);
       })
       .catch((err) => {
+        setLoading(false);
         console.error(err);
         toast.error("Error changing password");
       });
