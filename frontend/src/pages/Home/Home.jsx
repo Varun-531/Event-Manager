@@ -71,7 +71,7 @@ const Home = () => {
               </button>
             ) : (
               <button className="home-button" onClick={handleDash}>
-                Dashboard
+                All Events
               </button>
             )}
             <button className="home-button" onClick={handleScrollToAbout}>
