@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Userboard.css";
+import "./myEvents.css";
 import Calendar from "react-calendar";
 import { useCookies } from "react-cookie";
 import useWindowSize from "react-use/lib/useWindowSize";
@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import sad from "./sad-svgrepo-com.svg";
 import CreateEvent from "../CreateEvent/CreateEvent.jsx";
 
-const Userboard = () => {
+const MyEvents = () => {
   const [cookies] = useCookies(["userId"]);
   const userId = cookies.userId;
   const { width, height } = useWindowSize();
@@ -391,7 +391,7 @@ const Userboard = () => {
         </div>
       )}
       {userId ? (
-        <div className="userboard-container">
+        <div className="myEvents-container">
           <div className="sidebar">
             <ul>
               <li
@@ -432,7 +432,7 @@ const Userboard = () => {
             <div>
               <h3 className="text-3xl">You are not logged in</h3>
               <p className="text-lg">
-                Please login to view your userboard and requests
+                Please login to view youM myEvents and requests
               </p>
               <button
                 className="bg-slate-900 text-slate-200 text-sm font-medium py-2 px-5 rounded hover:bg-slate-800"
@@ -448,4 +448,4 @@ const Userboard = () => {
   );
 };
 
-export default Userboard;
+export default MyEvents;

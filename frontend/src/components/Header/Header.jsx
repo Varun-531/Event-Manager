@@ -40,9 +40,9 @@
 //               </li>
 //               <li
 //                 className="headerLink cursor-pointer"
-//                 onClick={() => navigate("/userboard")}
+//                 onClick={() => navigate("/myEvents")}
 //               >
-//                 UserBoard
+//                 myEvents
 //               </li>
 //               <li>
 //                 <button onClick={handleLogout}>Logout</button>
@@ -117,11 +117,11 @@ const Header = () => {
               <li
                 // className="headerLink cursor-pointer"
                 className={`cursor-pointer ${
-                  isActive("/userboard") ? "text-slate-500 font-semibold" : ""
+                  isActive("/myEvents") ? "text-slate-500 font-semibold" : ""
                 }`}
-                onClick={() => navigate("/userboard")}
+                onClick={() => navigate("/myEvents")}
               >
-                Dashboard
+                My Events
               </li>
               <li>
                 <button onClick={handleLogout}>Logout</button>

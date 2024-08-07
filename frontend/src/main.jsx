@@ -8,9 +8,9 @@ import Login from "./pages/Login/Login.jsx";
 import CreateEvent from "./pages/CreateEvent/CreateEvent.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Event from "./pages/Event/Event.jsx";
-import Userboard from "./pages/Userboard/Userboard.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider.jsx";
+import MyEvents from "./pages/MyEvents/MyEvents";
 
 const router = createBrowserRouter([
   {
@@ -39,8 +39,8 @@ const router = createBrowserRouter([
         element: <Event />,
       },
       {
-        path: "/userboard",
-        element: <Userboard />,
+        path: "/myEvents",
+        element: <MyEvents />,
       },
     ],
   },
